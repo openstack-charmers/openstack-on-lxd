@@ -1,0 +1,21 @@
+name: juju-openstack-on-lxd
+config:
+  boot.autostart: "true"
+  security.nesting: "true"
+  security.privileged: "true"
+devices:
+  eth0:
+    mtu: "9000"
+    name: eth0
+    nictype: bridged
+    parent: lxcbr0
+    type: nic
+  eth1:
+    mtu: "9000"
+    name: eth1
+    nictype: bridged
+    parent: lxcbr0
+    type: nic
+  kvm:
+    path: /dev/kvm
+    type: unix-char
