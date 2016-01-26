@@ -73,28 +73,29 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:trusty/ceph-42
+    charm: local:trusty/ceph
     num_units: 3
     options:
       fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
       monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
       osd-devices: /srv/osd
       source: cloud:trusty-liberty
+      use-direct-io: False
   ceph-osd:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:trusty/ceph-osd-14
+    charm: local:trusty/ceph-osd
     num_units: 1
     options:
       osd-devices: /srv/osd
-      osd-reformat: 'yes'
       source: cloud:trusty-liberty
+      use-direct-io: False
   ceph-radosgw:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:trusty/ceph-radosgw-18
+    charm: cs:~openstack-charmers-next/trusty/ceph-radosgw
     num_units: 1
     options:
       source: cloud:trusty-liberty
@@ -103,7 +104,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:trusty/cinder-31
+    charm: cs:~openstack-charmers-next/trusty/cinder
     num_units: 1
     options:
       block-device: None
@@ -114,13 +115,13 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:trusty/cinder-ceph-14
+    charm: cs:~openstack-charmers-next/trusty/cinder-ceph
     num_units: 0
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:trusty/glance-28
+    charm: cs:~openstack-charmers-next/trusty/glance
     num_units: 1
     options:
       openstack-origin: cloud:trusty-liberty
@@ -128,7 +129,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:trusty/keystone-31
+    charm: cs:~openstack-charmers-next/trusty/keystone
     num_units: 1
     options:
       admin-password: openstack
@@ -137,7 +138,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:trusty/percona-cluster-31
+    charm: cs:~openstack-charmers-next/trusty/percona-cluster
     num_units: 1
     options:
       max-connections: 20000
@@ -146,7 +147,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:trusty/neutron-api-21
+    charm: cs:~openstack-charmers-next/trusty/neutron-api
     num_units: 1
     options:
       neutron-security-groups: true
@@ -156,7 +157,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:trusty/neutron-gateway-7
+    charm: cs:~openstack-charmers-next/trusty/neutron-gateway
     num_units: 1
     options:
       ext-port: eth1
@@ -165,13 +166,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:trusty/neutron-openvswitch-13
+    charm: cs:~openstack-charmers-next/trusty/neutron-openvswitch
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:trusty/nova-cloud-controller-64
+    charm: cs:~openstack-charmers-next/trusty/nova-cloud-controller
     num_units: 1
     options:
       network-manager: Neutron
@@ -181,7 +182,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:trusty/nova-compute-33
+    charm: cs:~openstack-charmers-next/trusty/nova-compute
     num_units: 1
     options:
       enable-live-migration: False
@@ -193,7 +194,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:trusty/openstack-dashboard-19
+    charm: cs:~openstack-charmers-next/trusty/openstack-dashboard
     num_units: 1
     options:
       openstack-origin: cloud:trusty-liberty
@@ -201,7 +202,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:trusty/rabbitmq-server-42
+    charm: cs:~openstack-charmers-next/trusty/rabbitmq-server
     num_units: 1
     options:
       source: cloud:trusty-liberty
