@@ -20,3 +20,9 @@ devices:
   kvm:
     path: /dev/kvm
     type: unix-char
+  root:
+    path: /
+    type: disk
+  tun:
+    path: /dev/net/tun
+    type: unix-char
