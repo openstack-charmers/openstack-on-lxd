@@ -61,8 +61,6 @@ relations:
   - cinder-ceph:ceph
 - - ceph:client
   - glance:ceph
-- - ceph-osd:mon
-  - ceph:osd
 - - ceph-radosgw:mon
   - ceph:radosgw
 - - ceph-radosgw:identity-service
@@ -78,16 +76,6 @@ services:
     options:
       fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
       monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
-      osd-devices: /srv/osd
-      source: cloud:trusty-liberty
-      use-direct-io: False
-  ceph-osd:
-    annotations:
-      gui-x: '1000'
-      gui-y: '500'
-    charm: local:trusty/ceph-osd
-    num_units: 1
-    options:
       osd-devices: /srv/osd
       source: cloud:trusty-liberty
       use-direct-io: False

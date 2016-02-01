@@ -21,6 +21,8 @@ Status: INPROGRESS
 
 Update the LXD profile that juju creates to:
 
+cat lxd-profile.yaml | lxc profile edit juju-openstack-on-lxd
+
 ## Enable securty.privleged
 
 This is currently required to support OVS in containers.
