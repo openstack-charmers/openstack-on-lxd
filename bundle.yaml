@@ -71,7 +71,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: local:trusty/ceph
+    charm: cs:~openstack-charmers-next/trusty/ceph
     num_units: 3
     options:
       fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
