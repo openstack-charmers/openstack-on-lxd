@@ -1,22 +1,5 @@
 # Fixes
 
-## Load of nbd module under 14.04 in nova-compute upstart config
-
-Fixed in git repo for Mitaka
-
-Impact: nova-compute package/nova source package
-
-## Ceph DIO under ZFS
-
-DirectIO is not supported with a ZFS backend in Ceph; needs a flag to tell the OSD's not todo this.
-
-[osd]
-journal dio = false
-
-Impact: ceph-osd, ceph charms.
-
-Status: INPROGRESS
-
 # LXD Profile - see lxd-profile.yaml
 
 Update the LXD profile that juju creates to:
@@ -25,7 +8,7 @@ cat lxd-profile.yaml | lxc profile edit juju-openstack-on-lxd
 
 ## Enable securty.privleged
 
-This is currently required to support OVS in containers.
+This is currently required to support libvirt in containers.
 
 ## Add /dev/kvm
 

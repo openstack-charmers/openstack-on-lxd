@@ -20,6 +20,9 @@ devices:
   kvm:
     path: /dev/kvm
     type: unix-char
+  mem:
+    path: /dev/mem
+    type: unix-char
   root:
     path: /
     type: disk
