@@ -4,7 +4,7 @@
 
 Update the LXD profile that juju creates to:
 
-cat lxd-profile.yaml | lxc profile edit juju-openstack-on-lxd
+cat lxd-profile.yaml | lxc profile edit juju-default
 
 ## Enable securty.privleged
 
@@ -25,5 +25,5 @@ So we don't get packet frag in overlay networks.
 ## DTRT
 
 ```
-cat lxd-profile.yaml | lxc profile edit juju-`juju switch`
+./setup.sh
 ```
