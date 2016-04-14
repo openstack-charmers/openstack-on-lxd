@@ -155,7 +155,6 @@ services:
     num_units: 1
     options:
       network-manager: Neutron
-      quantum-security-groups: 'yes'
   nova-compute:
     annotations:
       gui-x: '250'
@@ -167,7 +166,6 @@ services:
       enable-resize: False
       migration-auth-type: ssh
       cpu-mode: 'none'
-      manage-neutron-plugin-legacy-mode: False
   openstack-dashboard:
     annotations:
       gui-x: '500'

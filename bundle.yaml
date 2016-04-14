@@ -165,7 +165,6 @@ services:
     options:
       network-manager: Neutron
       openstack-origin: cloud:trusty-liberty
-      quantum-security-groups: 'yes'
   nova-compute:
     annotations:
       gui-x: '250'
@@ -177,7 +176,6 @@ services:
       enable-resize: False
       migration-auth-type: ssh
       openstack-origin: cloud:trusty-liberty
-      manage-neutron-plugin-legacy-mode: False
   openstack-dashboard:
     annotations:
       gui-x: '500'
