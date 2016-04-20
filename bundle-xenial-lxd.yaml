@@ -167,7 +167,7 @@ services:
       enable-live-migration: False
       enable-resize: False
       virt-type: lxd
-  lxc:
+  lxd:
     charm: cs:~openstack-charmers-next/xenial/lxd
     options:
       block-device: None
