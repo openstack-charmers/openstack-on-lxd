@@ -4,19 +4,22 @@
 
 This repository provides tools to support deployment of OpenStack in LXD containers using Juju, the service modelling tool for Ubuntu.
 
-## Requirements
+## Deployment
+
+### Requirements
 
 The tools in this repository require the use of Juju 2.0, which provides full support for the LXD local provider.
 
 ```
-sudo apt-get install juju lxd zfsutils-linux squid-deb-proxy
+sudo apt-get install juju lxd zfsutils-linux squid-deb-proxy \
+    python-novaclient python-keystoneclient python-glanceclient python-neutronclient
 ```
 
 These tools are provided as part of the Ubuntu 16.04 LTS release.
 
 You'll need a well specified machine to try this on with at least 8G of RAM and a SSD; for reference the author uses Lenovo x240 with an Intel i5 processor, 16G RAM and a 500G Samsung SSD (split into two - one partition for the OS and one partition for a ZFS pool).
 
-## LXD configuration
+### LXD configuration
 
 In order to allow the OpenStack Cloud to function, you'll need to reconfigure the default LXD bridge to support IPv4 networking; is also recommended that you use a fast storage backend such as ZFS on a SSD based block device.  Use the lxd provided configuration tool to help do this:
 
@@ -37,7 +40,7 @@ lxc profile device set default eth0 mtu 9000
 
 This will ensure you avoid any packet fragmentation type problems with overlay networks.
 
-## Test your configuration
+### Test your configuration
 
 Test out your configuration prior to launching an entire cloud:
 
@@ -51,7 +54,7 @@ This should result in a running container you can exec into:
 lxc exec <container-name> bash
 ```
 
-## LXD profile for Juju
+### LXD profile for Juju
 
 Juju creates a couple of profiles for the models that it creates by default; these are named juju-default and juju-admin.
 
@@ -74,7 +77,7 @@ juju bootstrap --config config.yaml localhost lxd
 
 Review the contents of the config.yaml prior to running this command and edit as appropriate; this configures some defaults for containers created in the model including setting up things like a APT proxy to improve performance of network operations.
 
-## Deploy the bundle
+### Deploy the bundle
 
 Next, deploy the OpenStack cloud using the provided bundle:
 
@@ -84,7 +87,9 @@ juju deploy bundle.yaml
 
 You can watch deployment progress using the 'juju status' command.  This may take some time depending on the speed of your system; CPU, disk and network speed will all effect deployment time.
 
-## Check access
+## Using the Cloud
+
+### Check access
 
 Once deployment has completed (units should report a ready state in the status output), check that you can access the deployed cloud OK:
 
@@ -98,12 +103,87 @@ cinder service-list
 
 This commands should all succeed and you should get a feel as to how the various OpenStack components are deployed in each container.
 
-## Upload an image
+### Upload an image
 
-## Configure some networks
+Before we can boot an instance, we need an image to boot in Glance:
 
-## Boot an instance and access it
+```
+curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
+    glance image-create --name="xenial" --visibility public --progress \
+        --container-format=bare --disk-format=qcow2
+```
 
-## Allocate a block device and present it to the instancea
+### Configure some networks
 
-## Access the dashboard
+First, create the 'external' network which actually maps directly to the LXD bridge:
+
+```
+./neutron-ext-net -g 10.0.8.1 -c 10.0.8.0/24 \
+    -f 10.0.8.201:10.0.8.254 ext_net
+```
+
+and then create an internal overlay network for the instances to actually attach to:
+
+```
+/neutron-tenant-net -t admin -r provider-router \
+    -N 10.0.8.1 internal 192.168.20.0/24
+```
+
+### Create a key-pair
+
+Upload your local public key into the cloud so you can access instances:
+
+```
+nova keypair-add --pub-key ~/.ssh/id_rsa.pub mykey
+```
+
+### Boot an instance
+
+You can now boot an instance on your cloud:
+
+```
+nova boot --image xenial --flavor m1.small --key-name mykey \
+   --nic net-id=$(neutron net-list | grep internal | awk '{ print $2 }') \
+   openstack-on-lxd-ftw
+```
+
+### Attaching a volume
+
+First, create a volume in cinder:
+
+```
+cinder create --name testvolume 10
+```
+
+then attach it to the instance we just booted in nova:
+
+```
+nova volume-attach xenial <uuid-of-volume> /dev/vdc
+```
+
+The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
+
+### Accessing your instance
+
+In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
+
+```
+nova floating-ip-create
+nova add-floating-ip <uuid-of-instance> <new-floating-ip>
+```
+
+and then allow access via SSH (and ping) - you only need todo this once:
+
+```
+neutron security-group-rule-create --protocol icmp \
+    --direction ingress default
+neutron security-group-rule-create --protocol tcp \
+    --port-range-min 22 --port-range-max 22 \
+    --direction ingress default
+```
+
+After running these commands you should be able to access the instance:
+
+```
+ssh ubuntu@<new-floating-ip>
+```
