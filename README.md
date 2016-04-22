@@ -1,4 +1,4 @@
-# Running OpenStack on LXD
+# Deploy OpenStack on LXD on your Laptop
 
 ## Overview
 
@@ -83,3 +83,17 @@ juju deploy bundle.yaml
 ```
 
 You can watch deployment progress using the 'juju status' command.  This may take some time depending on the speed of your system; CPU, disk and network speed will all effect deployment time.
+
+## Check access
+
+Once deployment has completed (units should report a ready state in the status output), check that you can access the deployed cloud OK:
+
+```
+source novarc
+keystone catalog
+nova service-list
+neutron agent-list
+cinder service-list
+```
+
+This commands should all succeed and you should get a feel as to how the various OpenStack components are deployed in each container.
