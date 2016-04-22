@@ -29,6 +29,14 @@ Ensure that you leave a range of IP addresses free to use for floating IP's for 
     Network and IP: 10.0.8.1/24
     DHCP range: 10.0.8.2 -> 10.0.8.200
 
+Also update the default profile to use Jumbo frames for all network connections into containers:
+
+```
+lxc profile device set default eth0 mtu 9000
+```
+
+This will ensure you avoid any packet fragmentation type problems with overlay networks.
+
 ## Test your configuration
 
 Test out your configuration prior to launching an entire cloud:
@@ -55,14 +63,6 @@ cat lxd-profile.yaml | lxc profile edit juju-default
 ```
 
 This will ensure that containers created by LXD for Juju have the correct permissions to run your OpenStack cloud.
-
-Also update the default profile to use Jumbo frames for all network connections into containers:
-
-```
-lxc profile device set default eth0 mtu 9000
-```
-
-This will ensure you avoid any packet fragmentation type problems with overlay networks.
 
 ## Bootstrap a Juju controller
 
