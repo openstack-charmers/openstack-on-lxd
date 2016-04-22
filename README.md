@@ -14,7 +14,7 @@ sudo apt-get install juju lxd zfsutils-linux squid-deb-proxy
 
 These tools are provided as part of the Ubuntu 16.04 LTS release.
 
-You'll need a well specified machine to try this on with at least 8G of RAM and a SSD.
+You'll need a well specified machine to try this on with at least 8G of RAM and a SSD; for reference the author uses Lenovo x240 with an Intel i5 processor, 16G RAM and a 500G Samsung SSD (split into two - one partition for the OS and one partition for a ZFS pool).
 
 ## LXD configuration
 
