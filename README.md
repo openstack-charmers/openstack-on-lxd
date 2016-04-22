@@ -67,7 +67,7 @@ cat lxd-profile.yaml | lxc profile edit juju-default
 
 This will ensure that containers created by LXD for Juju have the correct permissions to run your OpenStack cloud.
 
-## Bootstrap a Juju controller
+### Bootstrap a Juju controller
 
 Prior to deploying the OpenStack on LXD bundle, you'll need to bootstrap a controller to manage your Juju models:
 
