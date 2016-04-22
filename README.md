@@ -97,3 +97,13 @@ cinder service-list
 ```
 
 This commands should all succeed and you should get a feel as to how the various OpenStack components are deployed in each container.
+
+## Upload an image
+
+## Configure some networks
+
+## Boot an instance and access it
+
+## Allocate a block device and present it to the instancea
+
+## Access the dashboard
