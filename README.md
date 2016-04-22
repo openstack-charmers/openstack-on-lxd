@@ -12,7 +12,8 @@ The tools in this repository require the use of Juju 2.0, which provides full su
 
 ```
 sudo apt-get install juju lxd zfsutils-linux squid-deb-proxy \
-    python-novaclient python-keystoneclient python-glanceclient python-neutronclient
+    python-novaclient python-keystoneclient python-glanceclient \
+    python-neutronclient python-openstackclient
 ```
 
 These tools are provided as part of the Ubuntu 16.04 LTS release.
@@ -95,7 +96,7 @@ Once deployment has completed (units should report a ready state in the status o
 
 ```
 source novarc
-keystone catalog
+openstack catalog list
 nova service-list
 neutron agent-list
 cinder service-list
@@ -109,8 +110,7 @@ Before we can boot an instance, we need an image to boot in Glance:
 
 ```
 curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
-    glance image-create --name="xenial" --visibility public --progress \
-        --container-format=bare --disk-format=qcow2
+    openstack image create --public --container-format=bare --disk-format=qcow2 xenial
 ```
 
 ### Configure some networks
@@ -125,7 +125,7 @@ First, create the 'external' network which actually maps directly to the LXD bri
 and then create an internal overlay network for the instances to actually attach to:
 
 ```
-/neutron-tenant-net -t admin -r provider-router \
+./neutron-tenant-net -t admin -r provider-router \
     -N 10.0.8.1 internal 192.168.20.0/24
 ```
 
@@ -158,12 +158,13 @@ cinder create --name testvolume 10
 then attach it to the instance we just booted in nova:
 
 ```
-nova volume-attach xenial <uuid-of-volume> /dev/vdc
+nova volume-attach xenial $(cinder list | grep testvolume | awk '{ print $2 }') /dev/vdc
 ```
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
 
 ### Accessing your instance
+
 
 In order to access the instance you just booted on the cloud, you'll need to assign a floating IP address to the instance:
 
@@ -176,10 +177,10 @@ and then allow access via SSH (and ping) - you only need todo this once:
 
 ```
 neutron security-group-rule-create --protocol icmp \
-    --direction ingress default
+    --direction ingress $(nova secgroup-list | grep default | awk '{ print $2 }')
 neutron security-group-rule-create --protocol tcp \
     --port-range-min 22 --port-range-max 22 \
-    --direction ingress default
+    --direction ingress $(nova secgroup-list | grep default | awk '{ print $2 }')
 ```
 
 After running these commands you should be able to access the instance:
