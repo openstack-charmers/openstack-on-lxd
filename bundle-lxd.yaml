@@ -170,7 +170,7 @@ services:
   lxd:
     charm: cs:xenial/lxd
     options:
-      block-device: None
+      block-devices: None
   openstack-dashboard:
     annotations:
       gui-x: '500'
