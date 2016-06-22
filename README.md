@@ -20,6 +20,8 @@ These tools are provided as part of the Ubuntu 16.04 LTS release.
 
 You'll need a well specified machine to try this on with at least 8G of RAM and a SSD; for reference the author uses Lenovo x240 with an Intel i5 processor, 16G RAM and a 500G Samsung SSD (split into two - one partition for the OS and one partition for a ZFS pool).
 
+For s390x, this has been validated on a single LPAR with 12 CPUs, 40GB RAM, 2 ~40GB disks (one for the OS and one for the ZFS pool).
+
 ### LXD configuration
 
 In order to allow the OpenStack Cloud to function, you'll need to reconfigure the default LXD bridge to support IPv4 networking; is also recommended that you use a fast storage backend such as ZFS on a SSD based block device.  Use the lxd provided configuration tool to help do this:
@@ -82,8 +84,14 @@ Review the contents of the config.yaml prior to running this command and edit as
 
 Next, deploy the OpenStack cloud using the provided bundle:
 
+For amd64:
 ```
 juju deploy bundle.yaml
+```
+
+For s390x:
+```
+juju deploy bundle-s390x.yaml
 ```
 
 You can watch deployment progress using the 'juju status' command.  This may take some time depending on the speed of your system; CPU, disk and network speed will all effect deployment time.
@@ -108,8 +116,17 @@ This commands should all succeed and you should get a feel as to how the various
 
 Before we can boot an instance, we need an image to boot in Glance:
 
+For amd64:
+
 ```
 curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-disk1.img | \
+    openstack image create --public --container-format=bare --disk-format=qcow2 xenial
+```
+
+For s390x:
+
+```
+curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-s390x-disk1.img | \
     openstack image create --public --container-format=bare --disk-format=qcow2 xenial
 ```
 
@@ -158,7 +175,7 @@ cinder create --name testvolume 10
 then attach it to the instance we just booted in nova:
 
 ```
-nova volume-attach xenial $(cinder list | grep testvolume | awk '{ print $2 }') /dev/vdc
+nova volume-attach openstack-on-lxd-ftw $(cinder list | grep testvolume | awk '{ print $2 }') /dev/vdc
 ```
 
 The attached volume will be accessible once you login to the instance (see below).  It will need to be formatted and mounted!
