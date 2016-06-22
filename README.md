@@ -1,8 +1,12 @@
-# Deploy OpenStack on LXD on your Laptop
+# Deploy OpenStack on LXD
 
 ## Overview
 
-This repository provides tools to support deployment of OpenStack in LXD containers using Juju, the service modelling tool for Ubuntu.
+This repository provides resources and processes to support deployment of OpenStack in LXD containers using Juju, a powerful application modeling tool.
+
+Such a process is useful in developer scenarios where OpenStack can be deployed to a single laptop or server, provided of course that enough resources are available.
+
+These bundles, configurations and processes can be customized to fit numerous development or production scenarios.
 
 ## Deployment
 
@@ -18,9 +22,9 @@ sudo apt-get install juju lxd zfsutils-linux squid-deb-proxy \
 
 These tools are provided as part of the Ubuntu 16.04 LTS release.
 
-You'll need a well specified machine to try this on with at least 8G of RAM and a SSD; for reference the author uses Lenovo x240 with an Intel i5 processor, 16G RAM and a 500G Samsung SSD (split into two - one partition for the OS and one partition for a ZFS pool).
+You'll need a well specified machine with at least 8G of RAM and a SSD; for reference the author uses Lenovo x240 with an Intel i5 processor, 16G RAM and a 500G Samsung SSD (split into two - one partition for the OS and one partition for a ZFS pool).
 
-For s390x, this has been validated on a single LPAR with 12 CPUs, 40GB RAM, 2 ~40GB disks (one for the OS and one for the ZFS pool).
+For s390x, this has been validated on an LPAR with 12 CPUs, 40GB RAM, 2 ~40GB disks (one disk for the OS and one disk for the ZFS pool).
 
 ### LXD configuration
 
@@ -51,10 +55,11 @@ Test out your configuration prior to launching an entire cloud:
 lxc launch ubuntu-daily:xenial
 ```
 
-This should result in a running container you can exec into:
+This should result in a running container you can exec into and back out of:
 
 ```
 lxc exec <container-name> bash
+exit
 ```
 
 ### LXD profile for Juju
