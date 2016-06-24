@@ -1,3 +1,5 @@
+# NOTE: ceilometer, ceilometer-agent and mongodb are disabled in this
+# s390x bundle, pending resolution of https://bugs.launchpad.net/bugs/1595242.
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -65,8 +67,28 @@ relations:
   - ceph:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
+#- - ceilometer
+#  - keystone:identity-service
+#- - ceilometer
+#  - rabbitmq-server
+#- - ceilometer
+#  - mongodb
+#- - ceilometer-agent
+#  - nova-compute
+#- - ceilometer-agent
+#  - ceilometer
 series: xenial
 services:
+#  ceilometer:
+#    charm: cs:xenial/ceilometer
+#  ceilometer-agent:
+#    charm: cs:xenial/ceilometer-agent
   ceph:
     annotations:
       gui-x: '750'
@@ -107,6 +129,9 @@ services:
       gui-y: '0'
     charm: cs:xenial/glance
     num_units: 1
+  heat:
+    charm: cs:xenial/heat
+    num_units: 1
   keystone:
     annotations:
       gui-x: '500'
@@ -115,6 +140,8 @@ services:
     num_units: 1
     options:
       admin-password: openstack
+#  mongodb:
+#    charm: cs:trusty/mongodb-37
   mysql:
     annotations:
       gui-x: '0'
