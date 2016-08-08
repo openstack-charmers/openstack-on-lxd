@@ -87,15 +87,10 @@ Review the contents of the config.yaml prior to running this command and edit as
 
 ### Configure a PowerNV (ppc64el) Host
 
-When deployed directly to metal, the nova-compute charm sets smt=off, as is necessary for libvirt usage.  However, when nova-compute is in a container, the containment prevents ppc64_cpu from modifying the host's smt value.
-
-Also, for Xenial ppc64el, the netlink_diag kernel module isn't loaded in a minimal install, and must be loaded to satisfy the lxd charm.
-
-For nova-compute (libvirt + qemu) in ppc64el scenarios:
+When deployed directly to metal, the nova-compute charm sets smt=off, as is necessary for libvirt usage.  However, when nova-compute is in a container, the containment prevents ppc64_cpu from modifying the host's smt value.  It is necessary to pre-configure the host smt setting for nova-compute (libvirt + qemu) in ppc64el scenarios.
 
 ```
 sudo ppc64_cpu --smt=off
-sudo modprobe netlink_diag
 ```
 
 ### Deploy the bundle
@@ -110,6 +105,11 @@ juju deploy bundle.yaml
 For s390x:
 ```
 juju deploy bundle-s390x.yaml
+```
+
+For ppc64el (PowerNV):
+```
+juju deploy bundle-ppc64el.yaml
 ```
 
 You can watch deployment progress using the 'juju status' command.  This may take some time depending on the speed of your system; CPU, disk and network speed will all effect deployment time.
