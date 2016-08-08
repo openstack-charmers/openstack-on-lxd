@@ -85,6 +85,14 @@ juju bootstrap --config config.yaml localhost lxd
 
 Review the contents of the config.yaml prior to running this command and edit as appropriate; this configures some defaults for containers created in the model including setting up things like a APT proxy to improve performance of network operations.
 
+### Configure a PowerNV (ppc64el) Host
+
+When deployed directly to metal, the nova-compute charm sets smt=off, as is necessary for libvirt usage.  However, when nova-compute is in a container, the containment prevents ppc64_cpu from modifying the host's smt value.  It is necessary to pre-configure the host smt setting for nova-compute (libvirt + qemu) in ppc64el scenarios.
+
+```
+sudo ppc64_cpu --smt=off
+```
+
 ### Deploy the bundle
 
 Next, deploy the OpenStack cloud using the provided bundle:
@@ -97,6 +105,11 @@ juju deploy bundle.yaml
 For s390x:
 ```
 juju deploy bundle-s390x.yaml
+```
+
+For ppc64el (PowerNV):
+```
+juju deploy bundle-ppc64el.yaml
 ```
 
 You can watch deployment progress using the 'juju status' command.  This may take some time depending on the speed of your system; CPU, disk and network speed will all effect deployment time.
