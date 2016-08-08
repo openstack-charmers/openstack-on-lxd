@@ -85,6 +85,14 @@ juju bootstrap --config config.yaml localhost lxd
 
 Review the contents of the config.yaml prior to running this command and edit as appropriate; this configures some defaults for containers created in the model including setting up things like a APT proxy to improve performance of network operations.
 
+### PowerNV (ppc64el) Specific Host Prep
+
+For nova-compute (libvirt + qemu) in ppc64el scenarios, disable smt on the host:
+
+```
+sudo ppc64_cpu --smt=off
+```
+
 ### Deploy the bundle
 
 Next, deploy the OpenStack cloud using the provided bundle:
