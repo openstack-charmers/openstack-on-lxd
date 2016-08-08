@@ -85,12 +85,17 @@ juju bootstrap --config config.yaml localhost lxd
 
 Review the contents of the config.yaml prior to running this command and edit as appropriate; this configures some defaults for containers created in the model including setting up things like a APT proxy to improve performance of network operations.
 
-### PowerNV (ppc64el) Specific Host Prep
+### Configure a PowerNV (ppc64el) Host
 
-For nova-compute (libvirt + qemu) in ppc64el scenarios, disable smt on the host:
+When deployed directly to metal, the nova-compute charm sets smt=off, as is necessary for libvirt usage.  However, when nova-compute is in a container, the containment prevents ppc64_cpu from modifying the host's smt value.
+
+Also, for Xenial ppc64el, the netlink_diag kernel module isn't loaded in a minimal install, and must be loaded to satisfy the lxd charm.
+
+For nova-compute (libvirt + qemu) in ppc64el scenarios:
 
 ```
 sudo ppc64_cpu --smt=off
+sudo modprobe netlink_diag
 ```
 
 ### Deploy the bundle
