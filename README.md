@@ -148,6 +148,13 @@ curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-s390x-
     openstack image create --public --container-format=bare --disk-format=qcow2 xenial
 ```
 
+For ppc64el:
+
+```
+curl http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-ppc64el-disk1.img | \
+    openstack image create --public --container-format=bare --disk-format=qcow2 xenial
+```
+
 ### Configure some networks
 
 First, create the 'external' network which actually maps directly to the LXD bridge:
