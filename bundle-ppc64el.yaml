@@ -65,6 +65,10 @@ relations:
   - ceph:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
+- - glance-simplestreams-sync:identity-service
+  - keystone:identity-service
+- - glance-simplestreams-sync:amqp
+  - rabbitmq-server:amqp
 series: xenial
 services:
   ceph:
@@ -183,3 +187,13 @@ services:
       gui-y: '250'
     charm: cs:xenial/rabbitmq-server
     num_units: 1
+  glance-simplestreams-sync:
+    charm: cs:xenial/glance-simplestreams-sync
+    num_units: 1
+    options:
+      user_agent: "OpenStack-on-LXD ppc64el test"
+      mirror_list: "[{url: 'http://cloud-images.ubuntu.com/releases/',
+                    name_prefix: 'ubuntu:daily',
+                    path: 'streams/v1/index.sjson', max: 1,
+                    item_filters: ['release~(xenial|yakkety)',
+                    'arch~(ppc64el)', 'ftype~(disk1.img|disk.img)']}]"
