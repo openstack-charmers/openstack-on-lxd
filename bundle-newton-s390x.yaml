@@ -1,5 +1,10 @@
 # NOTE: ceilometer, ceilometer-agent and mongodb are disabled in this
-# s390x bundle, pending resolution of https://bugs.launchpad.net/bugs/1595242.
+# s390x bundle, pending resolution of:
+#     https://bugs.launchpad.net/bugs/1595242.
+#     https://bugs.launchpad.net/nova/+bug/1639239
+#
+# Also note, some services were not deployed due to OOM of the available LPAR
+# with 32GB RAM.
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
@@ -39,8 +44,8 @@ relations:
   - neutron-openvswitch:neutron-plugin
 - - neutron-openvswitch:amqp
   - rabbitmq-server:amqp
-- - openstack-dashboard:identity-service
-  - keystone:identity-service
+#- - openstack-dashboard:identity-service
+#  - keystone:identity-service
 - - nova-cloud-controller:shared-db
   - mysql:shared-db
 - - nova-cloud-controller:neutron-api
@@ -67,12 +72,12 @@ relations:
   - ceph:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-- - heat
-  - mysql
-- - heat
-  - keystone
-- - heat
-  - rabbitmq-server
+#- - heat
+#  - mysql
+#- - heat
+#  - keystone
+#- - heat
+#  - rabbitmq-server
 #- - ceilometer
 #  - keystone:identity-service
 #- - ceilometer
@@ -134,11 +139,11 @@ services:
     num_units: 1
     options:
       openstack-origin: cloud:xenial-newton
-  heat:
-    charm: cs:xenial/heat
-    num_units: 1
-    options:
-      openstack-origin: cloud:xenial-newton
+#  heat:
+#    charm: cs:xenial/heat
+#    num_units: 1
+#    options:
+#      openstack-origin: cloud:xenial-newton
   keystone:
     annotations:
       gui-x: '500'
@@ -157,8 +162,8 @@ services:
     charm: cs:xenial/percona-cluster
     num_units: 1
     options:
-      max-connections: 20000
-      dataset-size: 256M
+      max-connections: 10000
+      dataset-size: 512M
       source: cloud:xenial-newton
   neutron-api:
     annotations:
@@ -170,6 +175,7 @@ services:
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
       openstack-origin: cloud:xenial-newton
+      flat-network-providers: physnet1
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -177,7 +183,7 @@ services:
     charm: cs:xenial/neutron-gateway
     num_units: 1
     options:
-      ext-port: eth1
+      bridge-mappings: physnet1:br-ex
       openstack-origin: cloud:xenial-newton
   neutron-openvswitch:
     annotations:
@@ -206,14 +212,14 @@ services:
       migration-auth-type: ssh
       cpu-mode: 'none'
       openstack-origin: cloud:xenial-newton
-  openstack-dashboard:
-    annotations:
-      gui-x: '500'
-      gui-y: '-250'
-    charm: cs:xenial/openstack-dashboard
-    num_units: 1
-    options:
-      openstack-origin: cloud:xenial-newton
+#  openstack-dashboard:
+#    annotations:
+#      gui-x: '500'
+#      gui-y: '-250'
+#    charm: cs:xenial/openstack-dashboard
+#    num_units: 1
+#    options:
+#      openstack-origin: cloud:xenial-newton
   rabbitmq-server:
     annotations:
       gui-x: '500'
