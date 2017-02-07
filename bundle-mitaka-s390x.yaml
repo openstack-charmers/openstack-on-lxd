@@ -106,8 +106,6 @@ services:
       gui-y: '250'
     charm: cs:xenial/ceph-radosgw
     num_units: 1
-    options:
-      use-embedded-webserver: true
   cinder:
     annotations:
       gui-x: '750'
@@ -115,6 +113,7 @@ services:
     charm: cs:xenial/cinder
     num_units: 1
     options:
+      worker-multiplier: 0.5
       block-device: None
       glance-api-version: 2
   cinder-ceph:
@@ -129,6 +128,8 @@ services:
       gui-y: '0'
     charm: cs:xenial/glance
     num_units: 1
+    options:
+      worker-multiplier: 0.5
   heat:
     charm: cs:xenial/heat
     num_units: 1
@@ -139,6 +140,7 @@ services:
     charm: cs:xenial/keystone
     num_units: 1
     options:
+      worker-multiplier: 0.5
       admin-password: openstack
 #  mongodb:
 #    charm: cs:trusty/mongodb-37
@@ -149,8 +151,8 @@ services:
     charm: cs:xenial/percona-cluster
     num_units: 1
     options:
-      max-connections: 20000
-      dataset-size: 256M
+      max-connections: 1000
+      innodb-buffer-pool-size: 512M
   neutron-api:
     annotations:
       gui-x: '500'
@@ -158,6 +160,7 @@ services:
     charm: cs:xenial/neutron-api
     num_units: 1
     options:
+      worker-multiplier: 0.5
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
   neutron-gateway:
@@ -167,6 +170,7 @@ services:
     charm: cs:xenial/neutron-gateway
     num_units: 1
     options:
+      worker-multiplier: 0.5
       ext-port: eth1
   neutron-openvswitch:
     annotations:
@@ -181,6 +185,7 @@ services:
     charm: cs:xenial/nova-cloud-controller
     num_units: 1
     options:
+      worker-multiplier: 0.5
       network-manager: Neutron
   nova-compute:
     annotations:

@@ -65,8 +65,28 @@ relations:
   - ceph:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
+- - ceilometer
+  - keystone:identity-service
+- - ceilometer
+  - rabbitmq-server
+- - ceilometer
+  - mongodb
+- - ceilometer-agent
+  - nova-compute
+- - ceilometer-agent
+  - ceilometer
 series: xenial
 services:
+  ceilometer:
+    charm: cs:xenial/ceilometer
+  ceilometer-agent:
+    charm: cs:xenial/ceilometer-agent
   ceph:
     annotations:
       gui-x: '750'
@@ -78,12 +98,15 @@ services:
       monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
       osd-devices: /srv/osd
       use-direct-io: False
+      source: cloud:xenial-newton
   ceph-radosgw:
     annotations:
       gui-x: '1000'
       gui-y: '250'
     charm: cs:xenial/ceph-radosgw
     num_units: 1
+    options:
+      source: cloud:xenial-newton
   cinder:
     annotations:
       gui-x: '750'
@@ -94,6 +117,7 @@ services:
       worker-multiplier: 0.5
       block-device: None
       glance-api-version: 2
+      openstack-origin: cloud:xenial-newton
   cinder-ceph:
     annotations:
       gui-x: '750'
@@ -108,6 +132,13 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.5
+      openstack-origin: cloud:xenial-newton
+  heat:
+    charm: cs:xenial/heat
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      openstack-origin: cloud:xenial-newton
   keystone:
     annotations:
       gui-x: '500'
@@ -117,21 +148,20 @@ services:
     options:
       worker-multiplier: 0.5
       admin-password: openstack
+      openstack-origin: cloud:xenial-newton
+  mongodb:
+    #charm: cs:trusty/mongodb-37
+    charm: cs:~james-page/xenial/mongodb
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-# Temporarily substituting the mysql charm for percona-cluster, pending
-# resolution of the following bugs.  Also, there is no Xenial mysql
-# charm as of 2016 Aug 8.
-#     https://bugs.launchpad.net/percona-xtradb-cluster/+bug/1570678
-#     https://bugs.launchpad.net/charms/+source/percona-cluster/+bug/1611134
-#    charm: cs:xenial/percona-cluster
-    charm: cs:trusty/mysql
+    charm: cs:xenial/percona-cluster
     num_units: 1
     options:
       max-connections: 1000
-      dataset-size: 512M
+      innodb-buffer-pool-size: 512M
+      source: cloud:xenial-newton
   neutron-api:
     annotations:
       gui-x: '500'
@@ -142,6 +172,8 @@ services:
       worker-multiplier: 0.5
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
+      openstack-origin: cloud:xenial-newton
+      flat-network-providers: physnet1
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -150,7 +182,8 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.5
-      ext-port: eth1
+      bridge-mappings: physnet1:br-ex
+      openstack-origin: cloud:xenial-newton
   neutron-openvswitch:
     annotations:
       gui-x: '250'
@@ -166,6 +199,7 @@ services:
     options:
       worker-multiplier: 0.5
       network-manager: Neutron
+      openstack-origin: cloud:xenial-newton
   nova-compute:
     annotations:
       gui-x: '250'
@@ -176,15 +210,21 @@ services:
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
+      cpu-mode: 'none'
+      openstack-origin: cloud:xenial-newton
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
     charm: cs:xenial/openstack-dashboard
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-newton
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
     charm: cs:xenial/rabbitmq-server
     num_units: 1
+    options:
+      source: cloud:xenial-newton
