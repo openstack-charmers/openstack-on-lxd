@@ -150,8 +150,9 @@ services:
       admin-password: openstack
       openstack-origin: cloud:xenial-newton
   mongodb:
+    # MongoDB charm needs >= Xenial support
+    # https://bugs.launchpad.net/bugs/1575534
     charm: cs:trusty/mongodb-37
-    #charm: cs:~james-page/xenial/mongodb
   mysql:
     annotations:
       gui-x: '0'

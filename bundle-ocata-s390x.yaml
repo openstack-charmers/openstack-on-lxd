@@ -3,6 +3,9 @@
 #     https://bugs.launchpad.net/bugs/1595242.
 #     https://bugs.launchpad.net/nova/+bug/1639239
 #
+# MongoDB charm needs >= Xenial support
+#     https://bugs.launchpad.net/bugs/1575534
+#
 # The following will need to be resolved in order to not-have a s390x-specific bundle:
 #     https://bugs.launchpad.net/cloud-archive/+bug/1650067
 relations:
