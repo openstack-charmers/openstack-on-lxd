@@ -150,8 +150,8 @@ services:
       admin-password: openstack
       openstack-origin: cloud:xenial-newton
   mongodb:
-    #charm: cs:trusty/mongodb-37
-    charm: cs:~james-page/xenial/mongodb
+    charm: cs:trusty/mongodb-37
+    #charm: cs:~james-page/xenial/mongodb
   mysql:
     annotations:
       gui-x: '0'
