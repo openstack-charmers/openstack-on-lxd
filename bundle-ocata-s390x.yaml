@@ -121,7 +121,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs~openstack-charmers-next/:xenial/cinder
+    charm: cs:~openstack-charmers-next/xenial/cinder
     num_units: 1
     options:
       worker-multiplier: 0.5
