@@ -3,8 +3,8 @@
 #     https://bugs.launchpad.net/bugs/1595242.
 #     https://bugs.launchpad.net/nova/+bug/1639239
 #
-# Also note, some services were not deployed due to OOM of the available LPAR
-# with 32GB RAM.
+# The following will need to be resolved in order to not-have a s390x-specific bundle:
+#     https://bugs.launchpad.net/cloud-archive/+bug/1650067
 relations:
 - - nova-compute:amqp
   - rabbitmq-server:amqp
