@@ -210,7 +210,6 @@ services:
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
-      cpu-mode: 'none'
       openstack-origin: cloud:xenial-ocata/proposed
   openstack-dashboard:
     annotations:
