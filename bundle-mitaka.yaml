@@ -165,7 +165,6 @@ services:
       worker-multiplier: 0.25
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
-#      flat-network-providers: physnet1
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -174,7 +173,6 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.25
-#      bridge-mappings: physnet1:br-ex
       ext-port: eth1
   neutron-openvswitch:
     annotations:
