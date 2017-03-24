@@ -91,7 +91,7 @@ services:
     charm: cs:xenial/cinder
     num_units: 1
     options:
-      worker-multiplier: 0.5
+      worker-multiplier: 0.25
       block-device: None
       glance-api-version: 2
   cinder-ceph:
@@ -107,7 +107,7 @@ services:
     charm: cs:xenial/glance
     num_units: 1
     options:
-      worker-multiplier: 0.5
+      worker-multiplier: 0.25
   keystone:
     annotations:
       gui-x: '500'
@@ -115,7 +115,7 @@ services:
     charm: cs:xenial/keystone
     num_units: 1
     options:
-      worker-multiplier: 0.5
+      worker-multiplier: 0.25
       admin-password: openstack
   mysql:
     annotations:
@@ -139,7 +139,7 @@ services:
     charm: cs:xenial/neutron-api
     num_units: 1
     options:
-      worker-multiplier: 0.5
+      worker-multiplier: 0.25
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
   neutron-gateway:
@@ -149,7 +149,7 @@ services:
     charm: cs:xenial/neutron-gateway
     num_units: 1
     options:
-      worker-multiplier: 0.5
+      worker-multiplier: 0.25
       ext-port: eth1
   neutron-openvswitch:
     annotations:
@@ -164,7 +164,7 @@ services:
     charm: cs:xenial/nova-cloud-controller
     num_units: 1
     options:
-      worker-multiplier: 0.5
+      worker-multiplier: 0.25
       network-manager: Neutron
   nova-compute:
     annotations:
