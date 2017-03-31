@@ -170,7 +170,7 @@ services:
     options:
       max-connections: 1000
       innodb-buffer-pool-size: 256M
-      tuning-level: fast
+#      tuning-level: fast  # In dev
       source: cloud:xenial-newton
   neutron-api:
     annotations:
