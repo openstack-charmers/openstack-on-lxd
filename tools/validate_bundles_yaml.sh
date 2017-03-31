@@ -11,7 +11,7 @@ for b in bundle-ocata.yaml bundle-newton.yaml; do
   fi
 done
 
-# Synthetically validate bundle for yaml and Juju syntax
+# Basic yaml syntax check
 bundles=$(find . -name "bundle*.yaml")
 for bundle in $bundles; do
     /usr/bin/env python -c 'import yaml,sys;yaml.safe_load(sys.stdin)' < $bundle
