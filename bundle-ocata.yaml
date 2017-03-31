@@ -81,6 +81,14 @@ relations:
   - nova-compute
 - - ceilometer-agent
   - ceilometer
+- - designate:dns-backend
+  - designate-bind:dns-backend
+- - designate:identity-service
+  - keystone:identity-service
+- - designate:shared-db
+  - mysql:shared-db
+- - designate:amqp
+  - rabbitmq-server:amqp
 series: xenial
 services:
   ceilometer:
@@ -124,6 +132,11 @@ services:
       gui-y: '250'
     charm: cs:~openstack-charmers-next/xenial/cinder-ceph
     num_units: 0
+  designate:
+    charm: cs:designate
+    num_units: 1
+  designate-bind:
+    charm: cs:designate-bind
   glance:
     annotations:
       gui-x: '250'
@@ -156,12 +169,14 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:~openstack-charmers-next/xenial/percona-cluster
+    #charm: cs:xenial/percona-cluster
+    # Use dev pxc charm for password and tuning fixes, until 17.05 releases
+    charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     options:
       max-connections: 1000
       innodb-buffer-pool-size: 256M
-#      tuning-level: fast  # In dev
+      tuning-level: fast
       source: cloud:xenial-ocata/proposed
   neutron-api:
     annotations:
