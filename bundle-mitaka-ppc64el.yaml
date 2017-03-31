@@ -132,7 +132,7 @@ services:
     options:
       max-connections: 1000
       dataset-size: 256M
-#      tuning-level: fast
+##      tuning-level: fast  # In dev
   neutron-api:
     annotations:
       gui-x: '500'
