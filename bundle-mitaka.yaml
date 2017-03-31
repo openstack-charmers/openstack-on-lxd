@@ -133,6 +133,7 @@ services:
     num_units: 1
   designate-bind:
     charm: cs:designate-bind
+    num_units: 1
   glance:
     annotations:
       gui-x: '250'
