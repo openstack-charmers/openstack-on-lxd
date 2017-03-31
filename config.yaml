@@ -1,2 +1,3 @@
 default-series: xenial
 agent-stream: devel
+apt-http-proxy: http://10.0.8.1:8000
