@@ -114,7 +114,7 @@ services:
     charm: cs:xenial/cinder
     num_units: 1
     options:
-      worker-multiplier: 0.25
+      worker-multiplier: 0.1
       block-device: None
       glance-api-version: 2
       openstack-origin: cloud:xenial-newton
@@ -131,13 +131,13 @@ services:
     charm: cs:xenial/glance
     num_units: 1
     options:
-      worker-multiplier: 0.25
+      worker-multiplier: 0.1
       openstack-origin: cloud:xenial-newton
   heat:
     charm: cs:xenial/heat
     num_units: 1
     options:
-      worker-multiplier: 0.25
+      worker-multiplier: 0.1
       openstack-origin: cloud:xenial-newton
   keystone:
     annotations:
@@ -146,7 +146,7 @@ services:
     charm: cs:xenial/keystone
     num_units: 1
     options:
-      worker-multiplier: 0.25
+      worker-multiplier: 0.1
       admin-password: openstack
       openstack-origin: cloud:xenial-newton
   mongodb:
@@ -170,7 +170,7 @@ services:
     charm: cs:xenial/neutron-api
     num_units: 1
     options:
-      worker-multiplier: 0.25
+      worker-multiplier: 0.1
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
       openstack-origin: cloud:xenial-newton
@@ -182,7 +182,7 @@ services:
     charm: cs:xenial/neutron-gateway
     num_units: 1
     options:
-      worker-multiplier: 0.25
+      worker-multiplier: 0.1
       bridge-mappings: physnet1:br-ex
       openstack-origin: cloud:xenial-newton
   neutron-openvswitch:
@@ -198,7 +198,7 @@ services:
     charm: cs:xenial/nova-cloud-controller
     num_units: 1
     options:
-      worker-multiplier: 0.25
+      worker-multiplier: 0.1
       network-manager: Neutron
       openstack-origin: cloud:xenial-newton
   nova-compute:
