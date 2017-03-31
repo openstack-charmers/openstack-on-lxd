@@ -1,12 +1,9 @@
 # NOTE: ceilometer, ceilometer-agent and mongodb are disabled in this
 # s390x bundle, pending resolution of:
 #     https://bugs.launchpad.net/bugs/1595242.
+#     https://bugs.launchpad.net/mongodb-charm/+bug/1678183
 #     https://bugs.launchpad.net/nova/+bug/1639239
-#
-# MongoDB charm needs >= Xenial support
 #     https://bugs.launchpad.net/bugs/1575534
-#
-# The following will need to be resolved in order to not-have a s390x-specific bundle:
 #     https://bugs.launchpad.net/cloud-archive/+bug/1650067
 relations:
 - - nova-compute:amqp
@@ -47,8 +44,8 @@ relations:
   - neutron-openvswitch:neutron-plugin
 - - neutron-openvswitch:amqp
   - rabbitmq-server:amqp
-#- - openstack-dashboard:identity-service
-#  - keystone:identity-service
+- - openstack-dashboard:identity-service
+  - keystone:identity-service
 - - nova-cloud-controller:shared-db
   - mysql:shared-db
 - - nova-cloud-controller:neutron-api
@@ -75,12 +72,12 @@ relations:
   - ceph:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-#- - heat
-#  - mysql
-#- - heat
-#  - keystone
-#- - heat
-#  - rabbitmq-server
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
 #- - ceilometer
 #  - keystone:identity-service
 #- - ceilometer
@@ -91,6 +88,14 @@ relations:
 #  - nova-compute
 #- - ceilometer-agent
 #  - ceilometer
+- - designate:dns-backend
+  - designate-bind:dns-backend
+- - designate:identity-service
+  - keystone:identity-service
+- - designate:shared-db
+  - mysql:shared-db
+- - designate:amqp
+  - rabbitmq-server:amqp
 series: xenial
 services:
 #  ceilometer:
@@ -134,6 +139,12 @@ services:
       gui-y: '250'
     charm: cs:xenial/cinder-ceph
     num_units: 0
+  designate:
+    charm: cs:designate
+    num_units: 1
+  designate-bind:
+    charm: cs:designate-bind
+    num_units: 1
   glance:
     annotations:
       gui-x: '250'
@@ -143,11 +154,12 @@ services:
     options:
       worker-multiplier: 0.1
       openstack-origin: cloud:xenial-ocata
-#  heat:
-#    charm: cs:xenial/heat
-#    num_units: 1
-#    options:
-#      openstack-origin: cloud:xenial-ocata
+  heat:
+    charm: cs:xenial/heat
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: cloud:xenial-ocata
   keystone:
     annotations:
       gui-x: '500'
@@ -165,12 +177,14 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:xenial/percona-cluster
+    #charm: cs:xenial/percona-cluster
+    # Use dev pxc charm for password and tuning fixes, until 17.05 releases
+    charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     options:
       max-connections: 1000
       innodb-buffer-pool-size: 256M
-#      tuning-level: fast  # In dev
+      tuning-level: fast
       source: cloud:xenial-ocata
   neutron-api:
     annotations:
@@ -191,8 +205,9 @@ services:
     charm: cs:xenial/neutron-gateway
     num_units: 1
     options:
-      worker-multiplier: 0.1
       bridge-mappings: physnet1:br-ex
+      data-port: br-ex:eth1
+      worker-multiplier: 0.1
       openstack-origin: cloud:xenial-ocata
   neutron-openvswitch:
     annotations:
@@ -220,16 +235,15 @@ services:
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
-      cpu-mode: 'none'
       openstack-origin: cloud:xenial-ocata
-#  openstack-dashboard:
-#    annotations:
-#      gui-x: '500'
-#      gui-y: '-250'
-#    charm: cs:xenial/openstack-dashboard
-#    num_units: 1
-#    options:
-#      openstack-origin: cloud:xenial-ocata
+  openstack-dashboard:
+    annotations:
+      gui-x: '500'
+      gui-y: '-250'
+    charm: cs:xenial/openstack-dashboard
+    num_units: 1
+    options:
+      openstack-origin: cloud:xenial-ocata
   rabbitmq-server:
     annotations:
       gui-x: '500'
