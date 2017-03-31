@@ -160,6 +160,7 @@ services:
       openstack-origin: cloud:xenial-newton
 #  mongodb:
 #    charm: cs:mongodb
+#    num_units: 1
   mysql:
     annotations:
       gui-x: '0'
