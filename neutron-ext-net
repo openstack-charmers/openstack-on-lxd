@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 try:
     from quantumclient.v2_0 import client
@@ -172,4 +172,3 @@ if __name__ == '__main__':
         logging.info('Router connected to %s', net_name)
     else:
         logging.warning('Router already connect to %s', net_name)
-
