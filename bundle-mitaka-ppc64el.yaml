@@ -131,7 +131,8 @@ services:
     num_units: 1
     options:
       max-connections: 1000
-      dataset-size: 512M
+      dataset-size: 256M
+#      tuning-level: fast
   neutron-api:
     annotations:
       gui-x: '500'
