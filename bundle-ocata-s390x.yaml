@@ -169,7 +169,8 @@ services:
     num_units: 1
     options:
       max-connections: 1000
-      innodb-buffer-pool-size: 512M
+      innodb-buffer-pool-size: 256M
+      tuning-level: fast
       source: cloud:xenial-ocata/proposed
   neutron-api:
     annotations:
