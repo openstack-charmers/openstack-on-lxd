@@ -151,7 +151,7 @@ services:
       worker-multiplier: 0.25
       admin-password: openstack
 #  mongodb:
-#    charm: cs:trusty/mongodb-37
+#    charm: cs:mongodb
   mysql:
     annotations:
       gui-x: '0'

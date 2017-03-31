@@ -152,7 +152,7 @@ services:
   mongodb:
     # MongoDB charm needs >= Xenial support
     # https://bugs.launchpad.net/bugs/1575534
-    charm: cs:trusty/mongodb-37
+    charm: cs:mongodb
   mysql:
     annotations:
       gui-x: '0'
