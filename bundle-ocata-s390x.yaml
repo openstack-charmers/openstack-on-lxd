@@ -191,8 +191,9 @@ services:
     charm: cs:~openstack-charmers-next/xenial/neutron-gateway
     num_units: 1
     options:
+      bridge-mappings: physnet1:br-ex
+      data-port: br-ex:eth1
       worker-multiplier: 0.1
-      ext-port: eth1
       openstack-origin: cloud:xenial-ocata/proposed
   neutron-openvswitch:
     annotations:
