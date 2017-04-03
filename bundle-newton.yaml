@@ -93,6 +93,7 @@ series: xenial
 services:
   ceilometer:
     charm: cs:xenial/ceilometer
+    num_units: 1
   ceilometer-agent:
     charm: cs:xenial/ceilometer-agent
   ceph:
