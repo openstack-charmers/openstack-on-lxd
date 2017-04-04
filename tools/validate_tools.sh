@@ -2,7 +2,6 @@
 
 oct_tmp="$(mktemp -d)"
 bzr export $oct_tmp https://code.launchpad.net/~ost-maintainers/openstack-charm-testing/trunk
-echo rm -rfv $oct_tmp
 
 tools="neutron-ext-net neutron-tenant-net"
 for tool in $tools; do
@@ -11,3 +10,5 @@ for tool in $tools; do
       exit 1
     fi
 done
+
+rm -rf $oct_tmp
