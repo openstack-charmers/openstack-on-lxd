@@ -65,8 +65,37 @@ relations:
   - ceph:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
+- - ceilometer
+  - keystone:identity-service
+- - ceilometer
+  - rabbitmq-server
+- - ceilometer
+  - mongodb
+- - ceilometer-agent
+  - nova-compute
+- - ceilometer-agent
+  - ceilometer
+- - designate:dns-backend
+  - designate-bind:dns-backend
+- - designate:identity-service
+  - keystone:identity-service
+- - designate:shared-db
+  - mysql:shared-db
+- - designate:amqp
+  - rabbitmq-server:amqp
 series: xenial
 services:
+  ceilometer:
+    charm: cs:xenial/ceilometer
+    num_units: 1
+  ceilometer-agent:
+    charm: cs:xenial/ceilometer-agent
   ceph:
     annotations:
       gui-x: '750'
@@ -84,8 +113,6 @@ services:
       gui-y: '250'
     charm: cs:xenial/ceph-radosgw
     num_units: 1
-    options:
-      use-embedded-webserver: true
   cinder:
     annotations:
       gui-x: '750'
@@ -93,6 +120,7 @@ services:
     charm: cs:xenial/cinder
     num_units: 1
     options:
+      worker-multiplier: 0.1
       block-device: None
       glance-api-version: 2
   cinder-ceph:
@@ -101,12 +129,25 @@ services:
       gui-y: '250'
     charm: cs:xenial/cinder-ceph
     num_units: 0
+  designate:
+    charm: cs:designate
+    num_units: 1
+  designate-bind:
+    charm: cs:designate-bind
+    num_units: 1
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
     charm: cs:xenial/glance
     num_units: 1
+    options:
+      worker-multiplier: 0.1
+  heat:
+    charm: cs:xenial/heat
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
   keystone:
     annotations:
       gui-x: '500'
@@ -114,16 +155,23 @@ services:
     charm: cs:xenial/keystone
     num_units: 1
     options:
+      worker-multiplier: 0.1
       admin-password: openstack
+  mongodb:
+    charm: cs:mongodb
+    num_units: 1
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:xenial/percona-cluster
+    #charm: cs:xenial/percona-cluster
+    # Use dev pxc charm for password and tuning fixes, until 17.05 releases
+    charm: cs:~openstack-charmers-next/percona-cluster
     num_units: 1
     options:
-      max-connections: 20000
-      dataset-size: 256M
+      max-connections: 1000
+      innodb-buffer-pool-size: 256M
+      tuning-level: fast
   neutron-api:
     annotations:
       gui-x: '500'
@@ -131,8 +179,10 @@ services:
     charm: cs:xenial/neutron-api
     num_units: 1
     options:
+      worker-multiplier: 0.1
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
+      flat-network-providers: physnet1
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -140,7 +190,9 @@ services:
     charm: cs:xenial/neutron-gateway
     num_units: 1
     options:
-      ext-port: eth1
+      bridge-mappings: physnet1:br-ex
+      data-port: br-ex:eth1
+      worker-multiplier: 0.1
   neutron-openvswitch:
     annotations:
       gui-x: '250'
@@ -154,6 +206,7 @@ services:
     charm: cs:xenial/nova-cloud-controller
     num_units: 1
     options:
+      worker-multiplier: 0.1
       network-manager: Neutron
   nova-compute:
     annotations:
