@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 try:
     from quantumclient.v2_0 import client
@@ -150,7 +150,12 @@ if __name__ == '__main__':
             # Check to see if subnet already plugged into router
             ports = quantum.list_ports(device_owner='network:router_interface',
                                        network_id=network['id'])
-            if len(ports['ports']) == 0:
+
+            ha_ports = quantum.list_ports(
+                device_owner='network:ha_router_replicated_interface',
+                network_id=network['id'])
+
+            if len(ports['ports'] + ha_ports['ports']) == 0:
                 logging.info('Adding interface from %s to %s',
                              opts.router, subnet_name)
                 router = routers['routers'][0]
