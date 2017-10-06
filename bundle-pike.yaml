@@ -1,0 +1,230 @@
+relations:
+- - nova-compute:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:amqp
+  - rabbitmq-server:amqp
+- - keystone:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:identity-service
+  - keystone:identity-service
+- - glance:identity-service
+  - keystone:identity-service
+- - neutron-api:identity-service
+  - keystone:identity-service
+- - neutron-openvswitch:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - neutron-api:shared-db
+  - mysql:shared-db
+- - neutron-api:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - glance:shared-db
+  - mysql:shared-db
+- - glance:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:image-service
+  - glance:image-service
+- - nova-compute:image-service
+  - glance:image-service
+- - nova-cloud-controller:cloud-compute
+  - nova-compute:cloud-compute
+- - nova-cloud-controller:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:quantum-network-service
+  - neutron-gateway:quantum-network-service
+- - nova-compute:neutron-plugin
+  - neutron-openvswitch:neutron-plugin
+- - neutron-openvswitch:amqp
+  - rabbitmq-server:amqp
+- - openstack-dashboard:identity-service
+  - keystone:identity-service
+- - nova-cloud-controller:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:neutron-api
+  - neutron-api:neutron-api
+- - cinder:image-service
+  - glance:image-service
+- - cinder:amqp
+  - rabbitmq-server:amqp
+- - cinder:identity-service
+  - keystone:identity-service
+- - cinder:cinder-volume-service
+  - nova-cloud-controller:cinder-volume-service
+- - cinder-ceph:storage-backend
+  - cinder:storage-backend
+- - ceph:client
+  - nova-compute:ceph
+- - cinder:shared-db
+  - mysql:shared-db
+- - ceph:client
+  - cinder-ceph:ceph
+- - ceph:client
+  - glance:ceph
+- - ceph-radosgw:mon
+  - ceph:radosgw
+- - ceph-radosgw:identity-service
+  - keystone:identity-service
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
+- - ceilometer
+  - keystone:identity-service
+- - ceilometer
+  - rabbitmq-server
+- - ceilometer
+  - mongodb
+- - ceilometer-agent
+  - nova-compute
+- - ceilometer-agent
+  - ceilometer
+series: xenial
+services:
+  ceilometer:
+    charm: cs:~openstack-charmers-next/xenial/ceilometer
+  ceilometer-agent:
+    charm: cs:~openstack-charmers-next/xenial/ceilometer-agent
+  ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/xenial/ceph
+    num_units: 3
+    options:
+      fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
+      monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
+      osd-devices: /srv/osd
+      use-direct-io: False
+      source: cloud:xenial-pike/proposed
+  ceph-radosgw:
+    annotations:
+      gui-x: '1000'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/xenial/ceph-radosgw
+    num_units: 1
+    options:
+      source: cloud:xenial-pike/proposed
+  cinder:
+    annotations:
+      gui-x: '750'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/xenial/cinder
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      block-device: None
+      glance-api-version: 2
+      openstack-origin: cloud:xenial-pike/proposed
+  cinder-ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/xenial/cinder-ceph
+    num_units: 0
+  glance:
+    annotations:
+      gui-x: '250'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/xenial/glance
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      openstack-origin: cloud:xenial-pike/proposed
+  heat:
+    charm: cs:~openstack-charmers-next/xenial/heat
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      openstack-origin: cloud:xenial-pike/proposed
+  keystone:
+    annotations:
+      gui-x: '500'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/xenial/keystone
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      admin-password: openstack
+      openstack-origin: cloud:xenial-pike/proposed
+  mongodb:
+    # MongoDB charm needs >= Xenial support
+    # https://bugs.launchpad.net/bugs/1575534
+    charm: cs:trusty/mongodb-37
+  mysql:
+    annotations:
+      gui-x: '0'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/xenial/percona-cluster
+    num_units: 1
+    options:
+      max-connections: 1000
+      innodb-buffer-pool-size: 512M
+      source: cloud:xenial-pike/proposed
+  neutron-api:
+    annotations:
+      gui-x: '500'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/xenial/neutron-api
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      neutron-security-groups: true
+      overlay-network-type: "gre vxlan"
+      openstack-origin: cloud:xenial-pike/proposed
+      flat-network-providers: physnet1
+  neutron-gateway:
+    annotations:
+      gui-x: '0'
+      gui-y: '0'
+    charm: cs:~openstack-charmers-next/xenial/neutron-gateway
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      bridge-mappings: physnet1:br-ex
+      openstack-origin: cloud:xenial-pike/proposed
+  neutron-openvswitch:
+    annotations:
+      gui-x: '250'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/xenial/neutron-openvswitch
+    num_units: 0
+  nova-cloud-controller:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:~openstack-charmers-next/xenial/nova-cloud-controller
+    num_units: 1
+    options:
+      worker-multiplier: 0.5
+      network-manager: Neutron
+      openstack-origin: cloud:xenial-pike/proposed
+  nova-compute:
+    annotations:
+      gui-x: '250'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/xenial/nova-compute
+    num_units: 1
+    options:
+      enable-live-migration: False
+      enable-resize: False
+      migration-auth-type: ssh
+      openstack-origin: cloud:xenial-pike/proposed
+  openstack-dashboard:
+    annotations:
+      gui-x: '500'
+      gui-y: '-250'
+    charm: cs:~openstack-charmers-next/xenial/openstack-dashboard
+    num_units: 1
+    options:
+      openstack-origin: cloud:xenial-pike/proposed
+  rabbitmq-server:
+    annotations:
+      gui-x: '500'
+      gui-y: '250'
+    charm: cs:~openstack-charmers-next/xenial/rabbitmq-server
+    num_units: 1
+    options:
+      source: cloud:xenial-pike/proposed
