@@ -204,6 +204,7 @@ services:
     options:
       enable-live-migration: False
       enable-resize: False
+      force-raw-images: False
       migration-auth-type: ssh
       cpu-mode: 'none'
   openstack-dashboard:
