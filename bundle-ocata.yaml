@@ -1,4 +1,6 @@
 relations:
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
 - - nova-compute:amqp
   - rabbitmq-server:amqp
 - - neutron-gateway:amqp
