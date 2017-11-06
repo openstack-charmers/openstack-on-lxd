@@ -6,6 +6,8 @@
 #     https://bugs.launchpad.net/bugs/1575534
 #     https://bugs.launchpad.net/cloud-archive/+bug/1650067
 relations:
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
 - - nova-compute:amqp
   - rabbitmq-server:amqp
 - - neutron-gateway:amqp
