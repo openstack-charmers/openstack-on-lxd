@@ -1,4 +1,6 @@
 relations:
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
 - - nova-compute:amqp
   - rabbitmq-server:amqp
 - - neutron-gateway:amqp
@@ -208,6 +210,8 @@ services:
     options:
       worker-multiplier: 0.1
       network-manager: Neutron
+      ram-allocation-ratio: 64
+      cpu-allocation-ratio: 64
   nova-compute:
     annotations:
       gui-x: '250'
