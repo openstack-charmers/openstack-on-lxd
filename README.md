@@ -1,5 +1,7 @@
 # Overview
 
+An all-on-one machine OpenStack cloud can be useful for development of OpenStack projects, OpenStack Charms, or for exercising and testing the same.
+
 This repository provides resources and processes to support deployment of OpenStack in LXD containers using Juju, a powerful application modeling tool.
 
 Such a process is useful in developer scenarios where OpenStack can be deployed to a single laptop or server, provided of course that enough resources are available.
