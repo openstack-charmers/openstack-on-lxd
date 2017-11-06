@@ -173,7 +173,13 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '250'
+<<<<<<< HEAD
+    #charm: cs:xenial/percona-cluster
+    # Use dev pxc charm for password and tuning fixes, until 17.05 releases
+    charm: cs:~openstack-charmers-next/percona-cluster
+=======
     charm: cs:xenial/percona-cluster
+>>>>>>> master
     num_units: 1
     options:
       max-connections: 1000
