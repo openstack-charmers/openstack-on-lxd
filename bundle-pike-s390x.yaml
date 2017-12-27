@@ -98,6 +98,8 @@ relations:
   - mysql:shared-db
 - - designate:amqp
   - rabbitmq-server:amqp
+- - memcached:cache
+  - designate:coordinator-memcached
 series: xenial
 services:
 #  ceilometer:
@@ -173,6 +175,9 @@ services:
       worker-multiplier: 0.1
       admin-password: openstack
       openstack-origin: cloud:xenial-pike
+  memcached:
+    charm: cs:memcached
+    num_units: 1
 #  mongodb:
 #    charm: cs:mongodb
 #    num_units: 1
