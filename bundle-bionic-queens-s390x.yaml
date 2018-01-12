@@ -1,0 +1,263 @@
+# NOTE: ceilometer, ceilometer-agent and mongodb are disabled in this
+# s390x bundle, pending resolution of:
+#     https://bugs.launchpad.net/bugs/1595242.
+#     https://bugs.launchpad.net/mongodb-charm/+bug/1678183
+#     https://bugs.launchpad.net/nova/+bug/1639239
+#     https://bugs.launchpad.net/bugs/1575534
+#     https://bugs.launchpad.net/cloud-archive/+bug/1650067
+relations:
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
+- - nova-compute:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:amqp
+  - rabbitmq-server:amqp
+- - keystone:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:identity-service
+  - keystone:identity-service
+- - glance:identity-service
+  - keystone:identity-service
+- - neutron-api:identity-service
+  - keystone:identity-service
+- - neutron-openvswitch:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - neutron-api:shared-db
+  - mysql:shared-db
+- - neutron-api:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - glance:shared-db
+  - mysql:shared-db
+- - glance:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:image-service
+  - glance:image-service
+- - nova-compute:image-service
+  - glance:image-service
+- - nova-cloud-controller:cloud-compute
+  - nova-compute:cloud-compute
+- - nova-cloud-controller:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:quantum-network-service
+  - neutron-gateway:quantum-network-service
+- - nova-compute:neutron-plugin
+  - neutron-openvswitch:neutron-plugin
+- - neutron-openvswitch:amqp
+  - rabbitmq-server:amqp
+- - openstack-dashboard:identity-service
+  - keystone:identity-service
+- - nova-cloud-controller:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:neutron-api
+  - neutron-api:neutron-api
+- - cinder:image-service
+  - glance:image-service
+- - cinder:amqp
+  - rabbitmq-server:amqp
+- - cinder:identity-service
+  - keystone:identity-service
+- - cinder:cinder-volume-service
+  - nova-cloud-controller:cinder-volume-service
+- - cinder-ceph:storage-backend
+  - cinder:storage-backend
+- - ceph:client
+  - nova-compute:ceph
+- - cinder:shared-db
+  - mysql:shared-db
+- - ceph:client
+  - cinder-ceph:ceph
+- - ceph:client
+  - glance:ceph
+- - ceph-radosgw:mon
+  - ceph:radosgw
+- - ceph-radosgw:identity-service
+  - keystone:identity-service
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
+#- - ceilometer
+#  - keystone:identity-service
+#- - ceilometer
+#  - rabbitmq-server
+#- - ceilometer
+#  - mongodb
+#- - ceilometer-agent
+#  - nova-compute
+#- - ceilometer-agent
+#  - ceilometer
+- - designate:dns-backend
+  - designate-bind:dns-backend
+- - designate:identity-service
+  - keystone:identity-service
+- - designate:shared-db
+  - mysql:shared-db
+- - designate:amqp
+  - rabbitmq-server:amqp
+- - memcached:cache
+  - designate:coordinator-memcached
+series: bionic
+services:
+#  ceilometer:
+#    charm: cs:bionic/ceilometer
+#    num_units: 1
+#  ceilometer-agent:
+#    charm: cs:bionic/ceilometer-agent
+  ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:bionic/ceph
+    num_units: 3
+    options:
+      fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
+      monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
+      osd-devices: /srv/osd
+      use-direct-io: False
+      source: cloud:bionic-queens
+  ceph-radosgw:
+    annotations:
+      gui-x: '1000'
+      gui-y: '250'
+    charm: cs:bionic/ceph-radosgw
+    num_units: 1
+    options:
+      source: cloud:bionic-queens
+  cinder:
+    annotations:
+      gui-x: '750'
+      gui-y: '0'
+    charm: cs:bionic/cinder
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      block-device: None
+      glance-api-version: 2
+      openstack-origin: cloud:bionic-queens
+  cinder-ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '250'
+    charm: cs:bionic/cinder-ceph
+    num_units: 0
+  designate:
+    charm: cs:designate
+    num_units: 1
+  designate-bind:
+    charm: cs:designate-bind
+    num_units: 1
+  glance:
+    annotations:
+      gui-x: '250'
+      gui-y: '0'
+    charm: cs:bionic/glance
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-queens
+  heat:
+    charm: cs:bionic/heat
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-queens
+  keystone:
+    annotations:
+      gui-x: '500'
+      gui-y: '0'
+    charm: cs:bionic/keystone
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      admin-password: openstack
+      openstack-origin: cloud:bionic-queens
+  memcached:
+    charm: cs:memcached
+    num_units: 1
+#  mongodb:
+#    charm: cs:mongodb
+#    num_units: 1
+  mysql:
+    annotations:
+      gui-x: '0'
+      gui-y: '250'
+    charm: cs:bionic/percona-cluster
+    num_units: 1
+    options:
+      max-connections: 1000
+      innodb-buffer-pool-size: 256M
+      tuning-level: fast
+      source: cloud:bionic-queens
+  neutron-api:
+    annotations:
+      gui-x: '500'
+      gui-y: '500'
+    charm: cs:bionic/neutron-api
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      neutron-security-groups: true
+      overlay-network-type: "gre vxlan"
+      openstack-origin: cloud:bionic-queens
+      flat-network-providers: physnet1
+  neutron-gateway:
+    annotations:
+      gui-x: '0'
+      gui-y: '0'
+    charm: cs:bionic/neutron-gateway
+    num_units: 1
+    options:
+      bridge-mappings: physnet1:br-ex
+      data-port: br-ex:eth1
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-queens
+  neutron-openvswitch:
+    annotations:
+      gui-x: '250'
+      gui-y: '500'
+    charm: cs:bionic/neutron-openvswitch
+    num_units: 0
+  nova-cloud-controller:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:bionic/nova-cloud-controller
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      network-manager: Neutron
+      openstack-origin: cloud:bionic-queens
+      ram-allocation-ratio: 64
+      cpu-allocation-ratio: 64
+  nova-compute:
+    annotations:
+      gui-x: '250'
+      gui-y: '250'
+    charm: cs:bionic/nova-compute
+    num_units: 1
+    options:
+      enable-live-migration: False
+      enable-resize: False
+      migration-auth-type: ssh
+      openstack-origin: cloud:bionic-queens
+      force-raw-images: False
+  openstack-dashboard:
+    annotations:
+      gui-x: '500'
+      gui-y: '-250'
+    charm: cs:bionic/openstack-dashboard
+    num_units: 1
+    options:
+      openstack-origin: cloud:bionic-queens
+  rabbitmq-server:
+    annotations:
+      gui-x: '500'
+      gui-y: '250'
+    charm: cs:bionic/rabbitmq-server
+    num_units: 1
+    options:
+      source: cloud:bionic-queens
