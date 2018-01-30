@@ -8,4 +8,4 @@ Such a process is useful in developer scenarios where OpenStack can be deployed 
 
 These bundles, configurations and processes can be customized to fit numerous development or production scenarios.
 
-For full details of use please refer the the [OpenStack on LXD](http://docs.openstack.org/developer/charm-guide/openstack-on-lxd.html) section of the [OpenStack Charm Guide](http://docs.openstack.org/developer/charm-guide).
+For full details of use please refer the the [OpenStack on LXD](https://docs.openstack.org/charm-guide/latest/openstack-on-lxd.html) section of the [OpenStack Charm Guide](http://docs.openstack.org/developer/charm-guide).
