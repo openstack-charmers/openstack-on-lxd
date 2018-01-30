@@ -67,17 +67,51 @@ relations:
   - ceph:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-- - nova-compute:lxd
-  - lxd:lxd
-series: xenial
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
+- - ceilometer
+  - keystone:identity-service
+- - ceilometer
+  - rabbitmq-server
+- - ceilometer
+  - mongodb
+- - ceilometer-agent
+  - nova-compute
+- - ceilometer-agent
+  - ceilometer
+- - designate:dns-backend
+  - designate-bind:dns-backend
+- - designate:identity-service
+  - keystone:identity-service
+- - designate:shared-db
+  - mysql:shared-db
+- - designate:amqp
+  - rabbitmq-server:amqp
+- - memcached:cache
+  - designate:coordinator-memcached
+series: bionic
 services:
+  ceilometer:
+    charm: cs:ceilometer
+    num_units: 1
+    options:
+      openstack-origin: distro-proposed
+  ceilometer-agent:
+    charm: cs:ceilometer-agent
+    options:
+      openstack-origin: distro-proposed
   ceph:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:xenial/ceph
+    charm: cs:ceph
     num_units: 3
     options:
+      source: proposed
       fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
       monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
       osd-devices: /srv/osd
@@ -86,15 +120,18 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:xenial/ceph-radosgw
+    charm: cs:ceph-radosgw
     num_units: 1
+    options:
+      source: proposed
   cinder:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:xenial/cinder
+    charm: cs:cinder
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       block-device: None
       glance-api-version: 2
@@ -102,30 +139,56 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:xenial/cinder-ceph
+    charm: cs:cinder-ceph
     num_units: 0
+    options:
+      openstack-origin: distro-proposed
+  designate:
+    charm: cs:designate
+    num_units: 1
+    options:
+      openstack-origin: distro-proposed
+  designate-bind:
+    charm: cs:designate-bind
+    num_units: 1
+    options:
+      openstack-origin: distro-proposed
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:xenial/glance
+    charm: cs:glance
     num_units: 1
     options:
+      openstack-origin: distro-proposed
+      worker-multiplier: 0.1
+  heat:
+    charm: cs:heat
+    num_units: 1
+    options:
+      openstack-origin: distro-proposed
       worker-multiplier: 0.1
   keystone:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:xenial/keystone
+    charm: cs:keystone
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       admin-password: openstack
+  memcached:
+    charm: cs:memcached
+    num_units: 1
+  mongodb:
+    charm: cs:mongodb
+    num_units: 1
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:xenial/percona-cluster
+    charm: cs:percona-cluster
     num_units: 1
     options:
       max-connections: 1000
@@ -135,59 +198,67 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:xenial/neutron-api
+    charm: cs:neutron-api
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
+      flat-network-providers: physnet1
   neutron-gateway:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:xenial/neutron-gateway
+    charm: cs:neutron-gateway
     num_units: 1
     options:
+      openstack-origin: distro-proposed
+      bridge-mappings: physnet1:br-ex
+      data-port: br-ex:eth1
       worker-multiplier: 0.1
-      ext-port: eth1
   neutron-openvswitch:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:xenial/neutron-openvswitch
+    charm: cs:neutron-openvswitch
     num_units: 0
+    options:
+      openstack-origin: distro-proposed
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:xenial/nova-cloud-controller
+    charm: cs:nova-cloud-controller
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       network-manager: Neutron
+      ram-allocation-ratio: '64'
+      cpu-allocation-ratio: '64'
   nova-compute:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:xenial/nova-compute
+    charm: cs:nova-compute
     num_units: 1
     options:
+      openstack-origin: distro-proposed
       enable-live-migration: False
       enable-resize: False
-      virt-type: lxd
-  lxd:
-    charm: cs:xenial/lxd
-    options:
-      block-devices: None
+      migration-auth-type: ssh
   openstack-dashboard:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:xenial/openstack-dashboard
+    charm: cs:openstack-dashboard
     num_units: 1
+    options:
+      openstack-origin: distro-proposed
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:xenial/rabbitmq-server
+    charm: cs:rabbitmq-server
     num_units: 1
