@@ -73,16 +73,30 @@ relations:
   - keystone
 - - heat
   - rabbitmq-server
-- - ceilometer
+- - ceilometer:identity-service
   - keystone:identity-service
-- - ceilometer
-  - rabbitmq-server
-- - ceilometer
-  - mongodb
-- - ceilometer-agent
-  - nova-compute
-- - ceilometer-agent
-  - ceilometer
+- - ceilometer:amqp
+  - rabbitmq-server:amqp
+- - ceilometer-agent:ceilometer-service
+  - ceilometer:ceilometer-service
+- - ceilometer:identity-notifications
+  - keystone:identity-notifications
+- - ceilometer-agent:nova-ceilometer
+  - nova-compute:nova-ceilometer
+- - gnocchi:storage-ceph
+  - ceph-mon:client
+- - gnocchi:shared-db
+  - mysql:shared-db
+- - gnocchi:amqp
+  - rabbitmq-server:amqp
+- - gnocchi:coordinator-memcached
+  - memcached:cache
+- - gnocchi:metric-service
+  - ceilometer:metric-service
+- - gnocchi:identity-service
+  - keystone:identity-service
+- - ceilometer:identity-credentials
+  - keystone:identity-credentials
 - - designate:dns-backend
   - designate-bind:dns-backend
 - - designate:identity-service
@@ -115,6 +129,7 @@ services:
       gui-y: '250'
     charm: cs:ceph-radosgw
     num_units: 1
+    options:
   cinder:
     annotations:
       gui-x: '750'
@@ -145,6 +160,12 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
+  gnocchi:
+    annotations:
+      gui-x: '1500'
+      gui-y: '250'
+    charm: cs:gnocchi
+    num_units: 1
   heat:
     charm: cs:heat
     num_units: 1
@@ -160,10 +181,10 @@ services:
       worker-multiplier: 0.1
       admin-password: openstack
   memcached:
+    annotations:
+      gui-x: '1500'
+      gui-y: '500'
     charm: cs:memcached
-    num_units: 1
-  mongodb:
-    charm: cs:mongodb
     num_units: 1
   mysql:
     annotations:
@@ -230,6 +251,7 @@ services:
       gui-y: '-250'
     charm: cs:openstack-dashboard
     num_units: 1
+    options:
   rabbitmq-server:
     annotations:
       gui-x: '500'
