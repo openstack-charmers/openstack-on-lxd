@@ -55,16 +55,16 @@ relations:
   - nova-cloud-controller:cinder-volume-service
 - - cinder-ceph:storage-backend
   - cinder:storage-backend
-- - ceph:client
+- - ceph-mon:client
   - nova-compute:ceph
 - - cinder:shared-db
   - mysql:shared-db
-- - ceph:client
+- - ceph-mon:client
   - cinder-ceph:ceph
-- - ceph:client
+- - ceph-mon:client
   - glance:ceph
 - - ceph-radosgw:mon
-  - ceph:radosgw
+  - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
 - - heat
@@ -107,6 +107,8 @@ relations:
   - rabbitmq-server:amqp
 - - memcached:cache
   - designate:coordinator-memcached
+- - ceph-osd:mon
+  - ceph-mon:osd
 series: xenial
 services:
   ceilometer:
@@ -114,11 +116,20 @@ services:
     num_units: 1
   ceilometer-agent:
     charm: cs:ceilometer-agent
-  ceph:
+  ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:ceph
+    charm: cs:ceph-mon
+    num_units: 3
+    options:
+      expected-osd-count: 3
+      source: cloud:xenial-queens
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:ceph-osd
     num_units: 3
     options:
       osd-devices: /srv/osd
