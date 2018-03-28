@@ -4,7 +4,7 @@
 # This check is not complete or perfect, but will catch many variances.
 base_comparison_bundle=bundle-xenial-mitaka.yaml
 allowable_diff="force-raw-images:|source:|options:|series:|openstack-origin:|^\-\-\-|^\+\+\+"
-for b in bundle-xenial-queens.yaml bundle-xenial-pike.yaml bundle-xenial-ocata.yaml bundle-xenial-newton.yaml; do
+for b in bundle-xenial-pike.yaml bundle-xenial-ocata.yaml bundle-xenial-newton.yaml; do
   if diff -Naur $b $base_comparison_bundle | egrep '^(\+|\-)' | egrep -v "$allowable_diff"; then
     echo "FAIL: $b:$base_comparison_bundle comparison NOT ok (too much diff)"
     exit 1
