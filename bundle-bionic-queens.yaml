@@ -107,8 +107,6 @@ services:
     charm: cs:ceph
     num_units: 3
     options:
-      fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
-      monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
       osd-devices: /srv/osd
       use-direct-io: False
   ceph-radosgw:
@@ -225,6 +223,7 @@ services:
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
+      force-raw-images: False
   openstack-dashboard:
     annotations:
       gui-x: '500'
