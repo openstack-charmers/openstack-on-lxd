@@ -98,12 +98,8 @@ services:
   ceilometer:
     charm: cs:ceilometer
     num_units: 1
-    options:
-      openstack-origin: distro-proposed
   ceilometer-agent:
     charm: cs:ceilometer-agent
-    options:
-      openstack-origin: distro-proposed
   ceph:
     annotations:
       gui-x: '750'
@@ -111,7 +107,6 @@ services:
     charm: cs:ceph
     num_units: 3
     options:
-      source: proposed
       fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
       monitor-secret: AQAi5a9UeJXUExAA+By9u+GPhl8/XiUQ4nwI3A==
       osd-devices: /srv/osd
@@ -122,8 +117,6 @@ services:
       gui-y: '250'
     charm: cs:ceph-radosgw
     num_units: 1
-    options:
-      source: proposed
   cinder:
     annotations:
       gui-x: '750'
@@ -131,7 +124,6 @@ services:
     charm: cs:cinder
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       block-device: None
       glance-api-version: 2
@@ -141,18 +133,12 @@ services:
       gui-y: '250'
     charm: cs:cinder-ceph
     num_units: 0
-    options:
-      openstack-origin: distro-proposed
   designate:
     charm: cs:designate
     num_units: 1
-    options:
-      openstack-origin: distro-proposed
   designate-bind:
     charm: cs:designate-bind
     num_units: 1
-    options:
-      openstack-origin: distro-proposed
   glance:
     annotations:
       gui-x: '250'
@@ -160,13 +146,11 @@ services:
     charm: cs:glance
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       worker-multiplier: 0.1
   heat:
     charm: cs:heat
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       worker-multiplier: 0.1
   keystone:
     annotations:
@@ -175,7 +159,6 @@ services:
     charm: cs:keystone
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       admin-password: openstack
   memcached:
@@ -201,7 +184,6 @@ services:
     charm: cs:neutron-api
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
@@ -213,7 +195,6 @@ services:
     charm: cs:neutron-gateway
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
       worker-multiplier: 0.1
@@ -223,8 +204,6 @@ services:
       gui-y: '500'
     charm: cs:neutron-openvswitch
     num_units: 0
-    options:
-      openstack-origin: distro-proposed
   nova-cloud-controller:
     annotations:
       gui-x: '0'
@@ -232,7 +211,6 @@ services:
     charm: cs:nova-cloud-controller
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       worker-multiplier: 0.1
       network-manager: Neutron
       ram-allocation-ratio: '64'
@@ -244,7 +222,6 @@ services:
     charm: cs:nova-compute
     num_units: 1
     options:
-      openstack-origin: distro-proposed
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
@@ -254,8 +231,6 @@ services:
       gui-y: '-250'
     charm: cs:openstack-dashboard
     num_units: 1
-    options:
-      openstack-origin: distro-proposed
   rabbitmq-server:
     annotations:
       gui-x: '500'
