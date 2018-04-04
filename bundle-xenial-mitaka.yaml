@@ -1,10 +1,3 @@
-# NOTE: ceilometer, ceilometer-agent and mongodb are disabled in this
-# s390x bundle, pending resolution of:
-#     https://bugs.launchpad.net/bugs/1595242.
-#     https://bugs.launchpad.net/mongodb-charm/+bug/1678183
-#     https://bugs.launchpad.net/nova/+bug/1639239
-#     https://bugs.launchpad.net/bugs/1575534
-#     https://bugs.launchpad.net/cloud-archive/+bug/1650067
 relations:
 - - nova-compute:ceph-access
   - cinder-ceph:ceph-access
@@ -80,16 +73,16 @@ relations:
   - keystone
 - - heat
   - rabbitmq-server
-#- - ceilometer
-#  - keystone:identity-service
-#- - ceilometer
-#  - rabbitmq-server
-#- - ceilometer
-#  - mongodb
-#- - ceilometer-agent
-#  - nova-compute
-#- - ceilometer-agent
-#  - ceilometer
+- - ceilometer
+  - keystone:identity-service
+- - ceilometer
+  - rabbitmq-server
+- - ceilometer
+  - mongodb
+- - ceilometer-agent
+  - nova-compute
+- - ceilometer-agent
+  - ceilometer
 - - designate:dns-backend
   - designate-bind:dns-backend
 - - designate:identity-service
@@ -102,16 +95,16 @@ relations:
   - designate:coordinator-memcached
 series: xenial
 services:
-#  ceilometer:
-#    charm: cs:xenial/ceilometer
-#    num_units: 1
-#  ceilometer-agent:
-#    charm: cs:xenial/ceilometer-agent
+  ceilometer:
+    charm: cs:ceilometer
+    num_units: 1
+  ceilometer-agent:
+    charm: cs:ceilometer-agent
   ceph:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:xenial/ceph
+    charm: cs:ceph
     num_units: 3
     options:
       fsid: 5a791d94-980b-11e4-b6f6-3c970e8b1cf7
@@ -122,13 +115,13 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:xenial/ceph-radosgw
+    charm: cs:ceph-radosgw
     num_units: 1
   cinder:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:xenial/cinder
+    charm: cs:cinder
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -138,7 +131,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:xenial/cinder-ceph
+    charm: cs:cinder-ceph
     num_units: 0
   designate:
     charm: cs:designate
@@ -150,12 +143,12 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:xenial/glance
+    charm: cs:glance
     num_units: 1
     options:
       worker-multiplier: 0.1
   heat:
-    charm: cs:xenial/heat
+    charm: cs:heat
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -163,7 +156,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:xenial/keystone
+    charm: cs:keystone
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -171,14 +164,14 @@ services:
   memcached:
     charm: cs:memcached
     num_units: 1
-#  mongodb:
-#    charm: cs:mongodb
-#    num_units: 1
+  mongodb:
+    charm: cs:mongodb
+    num_units: 1
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:xenial/percona-cluster
+    charm: cs:percona-cluster
     num_units: 1
     options:
       max-connections: 1000
@@ -188,7 +181,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:xenial/neutron-api
+    charm: cs:neutron-api
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -199,7 +192,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:xenial/neutron-gateway
+    charm: cs:neutron-gateway
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
@@ -209,13 +202,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:xenial/neutron-openvswitch
+    charm: cs:neutron-openvswitch
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:xenial/nova-cloud-controller
+    charm: cs:nova-cloud-controller
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -226,7 +219,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:xenial/nova-compute
+    charm: cs:nova-compute
     num_units: 1
     options:
       enable-live-migration: False
@@ -236,11 +229,11 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:xenial/openstack-dashboard
+    charm: cs:openstack-dashboard
     num_units: 1
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:xenial/rabbitmq-server
+    charm: cs:rabbitmq-server
     num_units: 1
