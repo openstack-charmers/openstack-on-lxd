@@ -10,5 +10,12 @@ for tool in $tools; do
       exit 1
     fi
 done
+rcs="openrc openrcv2 openrcv3_project openrcv3_domain"
+for rc in $rcs; do
+    if ! diff -Naur $oct_tmp/rcs/$rc $rc; then
+       echo "FAIL: $rc has too much diff against o-c-t"
+      exit 1
+    fi
+done
 
 rm -rf $oct_tmp

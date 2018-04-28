@@ -8,4 +8,9 @@ tools="neutron-ext-net neutron-tenant-net neutron-ext-net-ksv3 neutron-tenant-ne
 for tool in $tools; do
     cp -fvp $oct_tmp/bin/$tool $tool
 done
+rcs="openrc openrcv2 openrcv3_project openrcv3_domain"
+for rc in $rcs; do
+    cp -fvp $oct_tmp/rcs/$rc $rc
+    cp -fvp $oct_tmp/rcs/$rc $rc
+done
 rm -rf $oct_tmp
