@@ -26,6 +26,7 @@ devices:
   root:
     path: /
     type: disk
+    pool: default
   tun:
     path: /dev/net/tun
     type: unix-char
