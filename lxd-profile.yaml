@@ -5,6 +5,10 @@ config:
   security.privileged: "true"
   linux.kernel_modules: openvswitch,nbd,ip_tables,ip6_tables
 devices:
+  root:
+    path: /
+    pool: default
+    type: disk
   eth0:
     mtu: "9000"
     name: eth0
