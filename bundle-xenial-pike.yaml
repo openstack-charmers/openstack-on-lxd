@@ -75,8 +75,8 @@ relations:
   - rabbitmq-server
 - - ceilometer
   - keystone:identity-service
-- - ceilometer
-  - rabbitmq-server
+- - ceilometer:amqp
+  - rabbitmq-server:amqp
 - - ceilometer
   - mongodb
 - - ceilometer-agent
