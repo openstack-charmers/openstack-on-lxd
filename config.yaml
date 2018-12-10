@@ -1,2 +1,2 @@
-default-series: xenial
+default-series: bionic
 apt-http-proxy: http://10.0.8.1:8000
