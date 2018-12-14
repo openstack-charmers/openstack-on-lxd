@@ -133,6 +133,7 @@ services:
     options:
       osd-devices: /srv/osd
       use-direct-io: False
+      bluestore: False
   ceph-radosgw:
     annotations:
       gui-x: '1000'
