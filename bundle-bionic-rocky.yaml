@@ -135,6 +135,7 @@ services:
       osd-devices: /srv/osd
       use-direct-io: False
       source: cloud:bionic-rocky
+      bluestore: False
   ceph-radosgw:
     annotations:
       gui-x: '1000'
