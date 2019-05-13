@@ -83,6 +83,8 @@ relations:
   - keystone:identity-notifications
 - - ceilometer-agent:nova-ceilometer
   - nova-compute:nova-ceilometer
+- - ceilometer-agent:amqp
+  - rabbitmq-server:amqp
 - - gnocchi:storage-ceph
   - ceph-mon:client
 - - gnocchi:shared-db
@@ -227,8 +229,9 @@ services:
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
-      data-port: br-ex:eth1
+      data-port: br-ex:eth0 br-data:eth0
       worker-multiplier: 0.1
+      sysctl: ""
   neutron-openvswitch:
     annotations:
       gui-x: '250'
