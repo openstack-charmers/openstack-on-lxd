@@ -219,6 +219,7 @@ services:
       max-connections: 1000
       innodb-buffer-pool-size: 256M
       tuning-level: fast
+      source: cloud:bionic-stein
   neutron-api:
     annotations:
       gui-x: '500'
@@ -286,3 +287,5 @@ services:
       gui-y: '250'
     charm: cs:rabbitmq-server
     num_units: 1
+    options:
+      source: cloud:bionic-stein
