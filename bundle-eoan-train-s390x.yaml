@@ -171,6 +171,7 @@ services:
     num_units: 1
     options:
       nameservers: 'ns1.example.com ns2.example.com'
+      openstack-origin: distro
   designate-bind:
     charm: cs:designate-bind
     num_units: 1

@@ -122,6 +122,8 @@ services:
   ceilometer:
     charm: cs:ceilometer
     num_units: 1
+    options:
+      openstack-origin: cloud:bionic-train
   ceilometer-agent:
     charm: cs:ceilometer-agent
   ceph-mon:
@@ -174,6 +176,7 @@ services:
     num_units: 1
     options:
       nameservers: 'ns1.example.com ns2.example.com'
+      openstack-origin: cloud:bionic-train
   designate-bind:
     charm: cs:designate-bind
     num_units: 1
