@@ -1,4 +1,10 @@
 relations:
+- - placement
+  - mysql
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
 - - nova-compute:ceph-access
   - cinder-ceph:ceph-access
 - - nova-compute:amqp
@@ -231,6 +237,15 @@ services:
       overlay-network-type: "gre vxlan"
       openstack-origin: distro
       flat-network-providers: physnet1
+  placement:
+    annotations:
+      gui-x: '400'
+      gui-y: '400'
+    charm: cs:placement
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-train
   neutron-gateway:
     annotations:
       gui-x: '0'
