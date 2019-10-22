@@ -243,7 +243,7 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-train
+      openstack-origin: distro
   neutron-gateway:
     annotations:
       gui-x: '0'
