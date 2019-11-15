@@ -83,6 +83,8 @@ relations:
   - nova-compute
 - - ceilometer-agent
   - ceilometer
+- - ceilometer-agent:amqp
+  - rabbitmq-server:amqp
 - - designate:dns-backend
   - designate-bind:dns-backend
 - - designate:identity-service
