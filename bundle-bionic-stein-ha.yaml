@@ -173,6 +173,8 @@ relations:
   - vault:etcd
 - - memcached:cache
   - nova-cloud-controller:memcache
+- - octavia:neutron-openvswitch
+  - neutron-openvswitch:neutron-plugin
 series: bionic
 services:
   aodh:
