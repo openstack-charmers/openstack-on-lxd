@@ -198,7 +198,7 @@ services:
     charm: cs:~containers/easyrsa
     num_units: 1
   octavia:
-    charm: cs:barbican
+    charm: cs:octavia
     num_units: 3
     options:
       openstack-origin: cloud:bionic-stein
