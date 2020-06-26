@@ -118,15 +118,15 @@ relations:
 series: focal
 services:
   ceilometer:
-    charm: cs:openstack-charmers-next/focal/ceilometer
+    charm: cs:~openstack-charmers-next/focal/ceilometer
     num_units: 1
   ceilometer-agent:
-    charm: cs:openstack-charmers-next/focal/ceilometer-agent
+    charm: cs:~openstack-charmers-next/focal/ceilometer-agent
   ceph-mon:
     annotations:
       gui-x: '750'
       gui-y: '500'
-    charm: cs:openstack-charmers-next/focal/ceph-mon
+    charm: cs:~openstack-charmers-next/focal/ceph-mon
     num_units: 3
     options:
       expected-osd-count: 3
@@ -135,7 +135,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '500'
-    charm: cs:openstack-charmers-next/focal/ceph-osd
+    charm: cs:~openstack-charmers-next/focal/ceph-osd
     num_units: 3
     options:
       osd-devices: /srv/osd
@@ -145,7 +145,7 @@ services:
     annotations:
       gui-x: '1000'
       gui-y: '250'
-    charm: cs:openstack-charmers-next/focal/ceph-radosgw
+    charm: cs:~openstack-charmers-next/focal/ceph-radosgw
     num_units: 1
     options:
       source: distro
@@ -153,7 +153,7 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '0'
-    charm: cs:openstack-charmers-next/focal/cinder
+    charm: cs:~openstack-charmers-next/focal/cinder
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -164,22 +164,22 @@ services:
     annotations:
       gui-x: '750'
       gui-y: '250'
-    charm: cs:openstack-charmers-next/focal/cinder-ceph
+    charm: cs:~openstack-charmers-next/focal/cinder-ceph
     num_units: 0
   designate:
-    charm: cs:openstack-charmers-next/focal/designate
+    charm: cs:~openstack-charmers-next/focal/designate
     num_units: 1
     options:
       nameservers: 'ns1.example.com ns2.example.com'
       openstack-origin: distro
   designate-bind:
-    charm: cs:openstack-charmers-next/focal/designate-bind
+    charm: cs:~openstack-charmers-next/focal/designate-bind
     num_units: 1
   glance:
     annotations:
       gui-x: '250'
       gui-y: '0'
-    charm: cs:openstack-charmers-next/focal/glance
+    charm: cs:~openstack-charmers-next/focal/glance
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -188,12 +188,12 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '250'
-    charm: cs:openstack-charmers-next/focal/gnocchi
+    charm: cs:~openstack-charmers-next/focal/gnocchi
     num_units: 1
     options:
       openstack-origin: distro
   heat:
-    charm: cs:openstack-charmers-next/focal/heat
+    charm: cs:~openstack-charmers-next/focal/heat
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -202,7 +202,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '0'
-    charm: cs:openstack-charmers-next/focal/keystone
+    charm: cs:~openstack-charmers-next/focal/keystone
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -211,13 +211,13 @@ services:
     annotations:
       gui-x: '1500'
       gui-y: '500'
-    charm: cs:openstack-charmers-next/focal/memcached
+    charm: cs:~openstack-charmers-next/focal/memcached
     num_units: 1
   mysql:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:openstack-charmers-next/focal/percona-cluster
+    charm: cs:~openstack-charmers-next/focal/percona-cluster
     num_units: 1
     options:
       max-connections: 1000
@@ -227,7 +227,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '500'
-    charm: cs:openstack-charmers-next/focal/neutron-api
+    charm: cs:~openstack-charmers-next/focal/neutron-api
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -239,7 +239,7 @@ services:
     annotations:
       gui-x: '400'
       gui-y: '400'
-    charm: cs:openstack-charmers-next/focal/placement
+    charm: cs:~openstack-charmers-next/focal/placement
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -248,7 +248,7 @@ services:
     annotations:
       gui-x: '0'
       gui-y: '0'
-    charm: cs:openstack-charmers-next/focal/neutron-gateway
+    charm: cs:~openstack-charmers-next/focal/neutron-gateway
     num_units: 1
     options:
       manage-neutron-plugin-legacy-mode: true
@@ -261,13 +261,13 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '500'
-    charm: cs:openstack-charmers-next/focal/neutron-openvswitch
+    charm: cs:~openstack-charmers-next/focal/neutron-openvswitch
     num_units: 0
   nova-cloud-controller:
     annotations:
       gui-x: '0'
       gui-y: '500'
-    charm: cs:openstack-charmers-next/focal/nova-cloud-controller
+    charm: cs:~openstack-charmers-next/focal/nova-cloud-controller
     num_units: 1
     options:
       worker-multiplier: 0.1
@@ -279,7 +279,7 @@ services:
     annotations:
       gui-x: '250'
       gui-y: '250'
-    charm: cs:openstack-charmers-next/focal/nova-compute
+    charm: cs:~openstack-charmers-next/focal/nova-compute
     num_units: 1
     options:
       enable-live-migration: False
@@ -291,7 +291,7 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '-250'
-    charm: cs:openstack-charmers-next/focal/openstack-dashboard
+    charm: cs:~openstack-charmers-next/focal/openstack-dashboard
     num_units: 1
     options:
       openstack-origin: distro
@@ -299,5 +299,5 @@ services:
     annotations:
       gui-x: '500'
       gui-y: '250'
-    charm: cs:openstack-charmers-next/focal/rabbitmq-server
+    charm: cs:~openstack-charmers-next/focal/rabbitmq-server
     num_units: 1
