@@ -100,6 +100,8 @@ services:
   ceilometer:
     charm: cs:ceilometer
     num_units: 1
+    options:
+      openstack-origin: cloud:xenial-ocata
   ceilometer-agent:
     charm: cs:ceilometer-agent
   ceph:

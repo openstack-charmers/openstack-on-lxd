@@ -116,6 +116,8 @@ services:
   ceilometer:
     charm: cs:ceilometer
     num_units: 1
+    options:
+      openstack-origin: cloud:bionic-rocky
   ceilometer-agent:
     charm: cs:ceilometer-agent
   ceph-mon:
