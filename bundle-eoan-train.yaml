@@ -1,4 +1,10 @@
 relations:
+- - placement
+  - mysql
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
 - - nova-compute:ceph-access
   - cinder-ceph:ceph-access
 - - nova-compute:amqp
@@ -111,11 +117,13 @@ relations:
   - designate:coordinator-memcached
 - - ceph-osd:mon
   - ceph-mon:osd
-series: bionic
+series: eoan
 services:
   ceilometer:
     charm: cs:ceilometer
     num_units: 1
+    options:
+      openstack-origin: distro
   ceilometer-agent:
     charm: cs:ceilometer-agent
   ceph-mon:
@@ -126,7 +134,8 @@ services:
     num_units: 3
     options:
       expected-osd-count: 3
-      source: cloud:bionic-rocky
+      source: cloud:bionic-stein
+    series: bionic
   ceph-osd:
     annotations:
       gui-x: '1000'
@@ -136,8 +145,9 @@ services:
     options:
       osd-devices: /srv/osd
       use-direct-io: False
-      source: cloud:bionic-rocky
+      source: cloud:bionic-stein
       bluestore: False
+    series: bionic
   ceph-radosgw:
     annotations:
       gui-x: '1000'
@@ -145,7 +155,8 @@ services:
     charm: cs:ceph-radosgw
     num_units: 1
     options:
-      source: cloud:bionic-rocky
+      source: cloud:bionic-stein
+    series: bionic
   cinder:
     annotations:
       gui-x: '750'
@@ -156,7 +167,7 @@ services:
       worker-multiplier: 0.1
       block-device: None
       glance-api-version: 2
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
   cinder-ceph:
     annotations:
       gui-x: '750'
@@ -168,6 +179,7 @@ services:
     num_units: 1
     options:
       nameservers: 'ns1.example.com ns2.example.com'
+      openstack-origin: distro
   designate-bind:
     charm: cs:designate-bind
     num_units: 1
@@ -179,7 +191,7 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
   gnocchi:
     annotations:
       gui-x: '1500'
@@ -187,13 +199,13 @@ services:
     charm: cs:gnocchi
     num_units: 1
     options:
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
   heat:
     charm: cs:heat
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
   keystone:
     annotations:
       gui-x: '500'
@@ -202,13 +214,14 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
   memcached:
     annotations:
       gui-x: '1500'
       gui-y: '500'
     charm: cs:memcached
     num_units: 1
+    series: bionic
   mysql:
     annotations:
       gui-x: '0'
@@ -229,8 +242,17 @@ services:
       worker-multiplier: 0.1
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
       flat-network-providers: physnet1
+  placement:
+    annotations:
+      gui-x: '400'
+      gui-y: '400'
+    charm: cs:placement
+    num_units: 1
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: distro
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -241,7 +263,7 @@ services:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
   neutron-openvswitch:
     annotations:
       gui-x: '250'
@@ -257,7 +279,7 @@ services:
     options:
       worker-multiplier: 0.1
       network-manager: Neutron
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
       ram-allocation-ratio: '64'
       cpu-allocation-ratio: '64'
   nova-compute:
@@ -270,7 +292,7 @@ services:
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
       force-raw-images: False
   openstack-dashboard:
     annotations:
@@ -279,7 +301,7 @@ services:
     charm: cs:openstack-dashboard
     num_units: 1
     options:
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: distro
   rabbitmq-server:
     annotations:
       gui-x: '500'

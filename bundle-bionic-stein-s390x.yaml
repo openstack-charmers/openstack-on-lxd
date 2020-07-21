@@ -1,6 +1,6 @@
 relations:
-- - nova-compute:ceph-access
-  - cinder-ceph:ceph-access
+        #- - nova-compute:ceph-access
+        #  - cinder-ceph:ceph-access
 - - nova-compute:amqp
   - rabbitmq-server:amqp
 - - neutron-gateway:amqp
@@ -45,60 +45,58 @@ relations:
   - mysql:shared-db
 - - nova-cloud-controller:neutron-api
   - neutron-api:neutron-api
-- - cinder:image-service
-  - glance:image-service
-- - cinder:amqp
-  - rabbitmq-server:amqp
-- - cinder:identity-service
-  - keystone:identity-service
-- - cinder:cinder-volume-service
-  - nova-cloud-controller:cinder-volume-service
-- - cinder-ceph:storage-backend
-  - cinder:storage-backend
-- - ceph-mon:client
-  - nova-compute:ceph
-- - cinder:shared-db
-  - mysql:shared-db
-- - ceph-mon:client
-  - cinder-ceph:ceph
-- - ceph-mon:client
-  - glance:ceph
-- - ceph-radosgw:mon
-  - ceph-mon:radosgw
-- - ceph-radosgw:identity-service
-  - keystone:identity-service
+    #- - cinder:image-service
+    #  - glance:image-service
+    #- - cinder:amqp
+    #  - rabbitmq-server:amqp
+    #- - cinder:identity-service
+    #  - keystone:identity-service
+    #- - cinder:cinder-volume-service
+    #  - nova-cloud-controller:cinder-volume-service
+    #- - cinder-ceph:storage-backend
+    #  - cinder:storage-backend
+    #- - ceph-mon:client
+    #  - nova-compute:ceph
+    #- - cinder:shared-db
+    #  - mysql:shared-db
+    #- - ceph-mon:client
+    #  - cinder-ceph:ceph
+    #- - ceph-mon:client
+    #  - glance:ceph
+    #- - ceph-radosgw:mon
+    #  - ceph-mon:radosgw
+    #- - ceph-radosgw:identity-service
+    #  - keystone:identity-service
 - - heat
   - mysql
 - - heat
   - keystone
 - - heat
   - rabbitmq-server
-- - ceilometer:identity-service
-  - keystone:identity-service
-- - ceilometer:amqp
-  - rabbitmq-server:amqp
-- - ceilometer-agent:ceilometer-service
-  - ceilometer:ceilometer-service
-- - ceilometer:identity-notifications
-  - keystone:identity-notifications
-- - ceilometer-agent:nova-ceilometer
-  - nova-compute:nova-ceilometer
-- - ceilometer-agent:amqp
-  - rabbitmq-server:amqp
-- - gnocchi:storage-ceph
-  - ceph-mon:client
-- - gnocchi:shared-db
-  - mysql:shared-db
-- - gnocchi:amqp
-  - rabbitmq-server:amqp
-- - gnocchi:coordinator-memcached
-  - memcached:cache
-- - gnocchi:metric-service
-  - ceilometer:metric-service
-- - gnocchi:identity-service
-  - keystone:identity-service
-- - ceilometer:identity-credentials
-  - keystone:identity-credentials
+    #- - ceilometer:identity-service
+    #  - keystone:identity-service
+    #- - ceilometer:amqp
+    #  - rabbitmq-server:amqp
+    #- - ceilometer-agent:ceilometer-service
+    #  - ceilometer:ceilometer-service
+    #- - ceilometer:identity-notifications
+    #  - keystone:identity-notifications
+    #- - ceilometer-agent:nova-ceilometer
+    #  - nova-compute:nova-ceilometer
+    #- - gnocchi:storage-ceph
+    #  - ceph-mon:client
+    #- - gnocchi:shared-db
+    #  - mysql:shared-db
+    #- - gnocchi:amqp
+    #  - rabbitmq-server:amqp
+    #- - gnocchi:coordinator-memcached
+    #  - memcached:cache
+    #- - gnocchi:metric-service
+    #  - ceilometer:metric-service
+    #- - gnocchi:identity-service
+    #  - keystone:identity-service
+    #- - ceilometer:identity-credentials
+    #  - keystone:identity-credentials
 - - designate:dns-backend
   - designate-bind:dns-backend
 - - designate:identity-service
@@ -109,60 +107,59 @@ relations:
   - rabbitmq-server:amqp
 - - memcached:cache
   - designate:coordinator-memcached
-- - ceph-osd:mon
-  - ceph-mon:osd
+    #- - ceph-osd:mon
+    #  - ceph-mon:osd
 series: bionic
 services:
-  ceilometer:
-    charm: cs:ceilometer
-    num_units: 1
-  ceilometer-agent:
-    charm: cs:ceilometer-agent
-  ceph-mon:
-    annotations:
-      gui-x: '750'
-      gui-y: '500'
-    charm: cs:ceph-mon
-    num_units: 3
-    options:
-      expected-osd-count: 3
-      source: cloud:bionic-rocky
-  ceph-osd:
-    annotations:
-      gui-x: '1000'
-      gui-y: '500'
-    charm: cs:ceph-osd
-    num_units: 3
-    options:
-      osd-devices: /srv/osd
-      use-direct-io: False
-      source: cloud:bionic-rocky
-      bluestore: False
-  ceph-radosgw:
-    annotations:
-      gui-x: '1000'
-      gui-y: '250'
-    charm: cs:ceph-radosgw
-    num_units: 1
-    options:
-      source: cloud:bionic-rocky
-  cinder:
-    annotations:
-      gui-x: '750'
-      gui-y: '0'
-    charm: cs:cinder
-    num_units: 1
-    options:
-      worker-multiplier: 0.1
-      block-device: None
-      glance-api-version: 2
-      openstack-origin: cloud:bionic-rocky
-  cinder-ceph:
-    annotations:
-      gui-x: '750'
-      gui-y: '250'
-    charm: cs:cinder-ceph
-    num_units: 0
+        #  ceilometer:
+        #    charm: cs:ceilometer
+        #    num_units: 1
+        #  ceilometer-agent:
+        #    charm: cs:ceilometer-agent
+        #  ceph-mon:
+        #    annotations:
+        #      gui-x: '750'
+        #      gui-y: '500'
+        #    charm: cs:ceph-mon
+        #    num_units: 3
+        #    options:
+        #      expected-osd-count: 3
+        #      source: cloud:bionic-stein
+        #  ceph-osd:
+        #    annotations:
+        #      gui-x: '1000'
+        #      gui-y: '500'
+        #    charm: cs:ceph-osd
+        #    num_units: 3
+        #    options:
+        #      osd-devices: /srv/osd
+        #      use-direct-io: False
+        #      source: cloud:bionic-stein
+        #  ceph-radosgw:
+        #    annotations:
+        #      gui-x: '1000'
+        #      gui-y: '250'
+        #    charm: cs:ceph-radosgw
+        #    num_units: 1
+        #    options:
+        #      source: cloud:bionic-stein
+        #  cinder:
+        #    annotations:
+        #      gui-x: '750'
+        #      gui-y: '0'
+        #    charm: cs:cinder
+        #    num_units: 1
+        #    options:
+        #      worker-multiplier: 0.1
+        #      block-device: None
+        #      glance-api-version: 2
+        #      openstack-origin: cloud:bionic-stein
+        #  cinder-ceph:
+        #    annotations:
+        #      gui-x: '750'
+        #      gui-y: '250'
+        #    charm: cs:cinder-ceph
+        #    num_units: 0
   designate:
     charm: cs:designate
     num_units: 1
@@ -179,21 +176,21 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
-  gnocchi:
-    annotations:
-      gui-x: '1500'
-      gui-y: '250'
-    charm: cs:gnocchi
-    num_units: 1
-    options:
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
+      #  gnocchi:
+      #    annotations:
+      #      gui-x: '1500'
+      #      gui-y: '250'
+      #    charm: cs:gnocchi
+      #    num_units: 1
+      #    options:
+      #      openstack-origin: cloud:bionic-stein
   heat:
     charm: cs:heat
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
   keystone:
     annotations:
       gui-x: '500'
@@ -202,7 +199,7 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
   memcached:
     annotations:
       gui-x: '1500'
@@ -229,7 +226,7 @@ services:
       worker-multiplier: 0.1
       neutron-security-groups: true
       overlay-network-type: "gre vxlan"
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
       flat-network-providers: physnet1
   neutron-gateway:
     annotations:
@@ -241,7 +238,7 @@ services:
       bridge-mappings: physnet1:br-ex
       data-port: br-ex:eth1
       worker-multiplier: 0.1
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
   neutron-openvswitch:
     annotations:
       gui-x: '250'
@@ -257,7 +254,7 @@ services:
     options:
       worker-multiplier: 0.1
       network-manager: Neutron
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
       ram-allocation-ratio: '64'
       cpu-allocation-ratio: '64'
   nova-compute:
@@ -270,7 +267,7 @@ services:
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
       force-raw-images: False
   openstack-dashboard:
     annotations:
@@ -279,7 +276,7 @@ services:
     charm: cs:openstack-dashboard
     num_units: 1
     options:
-      openstack-origin: cloud:bionic-rocky
+      openstack-origin: cloud:bionic-stein
   rabbitmq-server:
     annotations:
       gui-x: '500'
