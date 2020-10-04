@@ -1,0 +1,250 @@
+local_overlay_enabled: true
+series: bionic
+# *** Please refer to the OpenStack Charms Deployment Guide for more        ***
+# *** information.
+# *** https://docs.openstack.org/project-deploy-guide/charm-deployment-guide **
+variables:
+  openstack-origin: &openstack-origin cloud:bionic-ussuri
+  ceph-origin: &ceph-origin cloud:bionic-stein
+  ceph-series: &ceph-series bionic
+  data-port: &data-port br-ex:eth1  # will add eth1 to each chassis as a gateway
+  worker-multiplier: &worker-multiplier 0.1
+  osd-devices: &osd-devices /srv/ceph
+  expected-osd-count: &expected-osd-count 3
+  expected-mon-count: &expected-mon-count 1
+relations:
+- - nova-compute:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:identity-service
+  - keystone:identity-service
+- - glance:identity-service
+  - keystone:identity-service
+- - neutron-api:identity-service
+  - keystone:identity-service
+- - neutron-api:amqp
+  - rabbitmq-server:amqp
+- - glance:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:image-service
+  - glance:image-service
+- - nova-compute:image-service
+  - glance:image-service
+- - nova-cloud-controller:cloud-compute
+  - nova-compute:cloud-compute
+- - nova-cloud-controller:amqp
+  - rabbitmq-server:amqp
+- - openstack-dashboard:identity-service
+  - keystone:identity-service
+- - nova-cloud-controller:neutron-api
+  - neutron-api:neutron-api
+- - cinder:image-service
+  - glance:image-service
+- - cinder:amqp
+  - rabbitmq-server:amqp
+- - cinder:identity-service
+  - keystone:identity-service
+- - cinder:cinder-volume-service
+  - nova-cloud-controller:cinder-volume-service
+- - cinder-ceph:storage-backend
+  - cinder:storage-backend
+- - ceph-mon:client
+  - nova-compute:ceph
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
+- - ceph-mon:client
+  - cinder-ceph:ceph
+- - ceph-mon:client
+  - glance:ceph
+- - ceph-osd:mon
+  - ceph-mon:osd
+- - ceph-radosgw:mon
+  - ceph-mon:radosgw
+- - ceph-radosgw:identity-service
+  - keystone:identity-service
+- - placement
+  - keystone
+- - placement
+  - nova-cloud-controller
+- - keystone:shared-db
+  - keystone-mysql-router:shared-db
+- - cinder:shared-db
+  - cinder-mysql-router:shared-db
+- - glance:shared-db
+  - glance-mysql-router:shared-db
+- - nova-cloud-controller:shared-db
+  - nova-mysql-router:shared-db
+- - neutron-api:shared-db
+  - neutron-mysql-router:shared-db
+- - openstack-dashboard:shared-db
+  - dashboard-mysql-router:shared-db
+- - placement:shared-db
+  - placement-mysql-router:shared-db
+- - vault:shared-db
+  - vault-mysql-router:shared-db
+- - keystone-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - cinder-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - nova-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - glance-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - neutron-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - dashboard-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - placement-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - vault-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - neutron-api-plugin-ovn:neutron-plugin
+  - neutron-api:neutron-plugin-api-subordinate
+- - ovn-central:certificates
+  - vault:certificates
+- - ovn-central:ovsdb-cms
+  - neutron-api-plugin-ovn:ovsdb-cms
+- - neutron-api:certificates
+  - vault:certificates
+- - ovn-chassis:nova-compute
+  - nova-compute:neutron-plugin
+- - ovn-chassis:certificates
+  - vault:certificates
+- - ovn-chassis:ovsdb
+  - ovn-central:ovsdb
+- - vault:certificates
+  - neutron-api-plugin-ovn:certificates
+- - vault:certificates
+  - cinder:certificates
+- - vault:certificates
+  - glance:certificates
+- - vault:certificates
+  - keystone:certificates
+- - vault:certificates
+  - nova-cloud-controller:certificates
+- - vault:certificates
+  - openstack-dashboard:certificates
+- - vault:certificates
+  - placement:certificates
+- - vault:certificates
+  - ceph-radosgw:certificates
+applications:
+  ceph-mon:
+    charm: cs:ceph-mon
+    num_units: 1
+    options:
+      expected-osd-count: *expected-osd-count
+      monitor-count: *expected-mon-count
+      source: *ceph-origin
+    series: *ceph-series
+  ceph-osd:
+    charm: cs:ceph-osd
+    num_units: 3
+    options:
+      osd-devices: *osd-devices
+      source: *ceph-origin
+      bluestore: false
+    series: *ceph-series
+  ceph-radosgw:
+    charm: cs:ceph-radosgw
+    num_units: 1
+    options:
+      source: *ceph-origin
+    series: *ceph-series
+  cinder-mysql-router:
+    charm: cs:mysql-router
+  cinder:
+    charm: cs:cinder
+    num_units: 1
+    options:
+      block-device: None
+      glance-api-version: 2
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+  cinder-ceph:
+    charm: cs:cinder-ceph
+    num_units: 0
+  glance-mysql-router:
+    charm: cs:mysql-router
+  glance:
+    charm: cs:glance
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+  keystone-mysql-router:
+    charm: cs:mysql-router
+  keystone:
+    charm: cs:keystone
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+  neutron-mysql-router:
+    charm: cs:mysql-router
+  neutron-api-plugin-ovn:
+    charm: cs:neutron-api-plugin-ovn
+  neutron-api:
+    charm: cs:neutron-api
+    num_units: 1
+    options:
+      neutron-security-groups: true
+      flat-network-providers: physnet1
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+  placement-mysql-router:
+    charm: cs:mysql-router
+  placement:
+    charm: cs:placement
+    num_units: 1
+    options:
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+  nova-mysql-router:
+    charm: cs:mysql-router
+  nova-cloud-controller:
+    charm: cs:nova-cloud-controller
+    num_units: 1
+    options:
+      network-manager: Neutron
+      worker-multiplier: *worker-multiplier
+      openstack-origin: *openstack-origin
+  nova-compute:
+    charm: cs:nova-compute
+    num_units: 3
+    options:
+      config-flags: default_ephemeral_format=ext4
+      enable-live-migration: true
+      enable-resize: true
+      migration-auth-type: ssh
+      openstack-origin: *openstack-origin
+  dashboard-mysql-router:
+    charm: cs:mysql-router
+  openstack-dashboard:
+    charm: cs:openstack-dashboard
+    num_units: 1
+    options:
+      openstack-origin: *openstack-origin
+  rabbitmq-server:
+    charm: cs:rabbitmq-server
+    num_units: 1
+  mysql-innodb-cluster:
+    charm: cs:mysql-innodb-cluster
+    num_units: 3
+  ovn-central:
+    charm: cs:ovn-central
+    num_units: 3
+    options:
+      source: *openstack-origin
+  ovn-chassis:
+    charm: cs:ovn-chassis
+    # *** Please update the `bridge-interface-mappings` to values suitable ***
+    # *** for thehardware used in your deployment.  See the referenced     ***
+    # *** documentation at the top of this file.                           ***
+    options:
+      ovn-bridge-mappings: physnet1:br-ex
+      bridge-interface-mappings: *data-port
+  vault-mysql-router:
+    charm: cs:mysql-router
+  vault:
+    charm: cs:vault
+    num_units: 1
