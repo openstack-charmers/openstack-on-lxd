@@ -121,6 +121,12 @@ relations:
   - ceph-radosgw:certificates
 - - vault:certificates
   - mysql-innodb-cluster:certificates
+- - heat
+  - mysql-innodb-cluster
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
 series: focal
 services:
   ceilometer:
