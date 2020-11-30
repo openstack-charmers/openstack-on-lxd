@@ -137,6 +137,8 @@ relations:
   - rabbitmq-server:amqp
 - - memcached:cache
   - designate:coordinator-memcached
+- - ceilometer:certificates
+  - vault:certificates
 - - ceilometer:identity-service
   - keystone:identity-service
 - - ceilometer:amqp
