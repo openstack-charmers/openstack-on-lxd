@@ -133,6 +133,12 @@ relations:
   - keystone:identity-service
 - - ceilometer:identity-credentials
   - keystone:identity-credentials
+- - neutron-openvswitch:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - nova-compute:neutron-plugin
+  - neutron-openvswitch:neutron-plugin
+- - neutron-openvswitch:amqp
+  - rabbitmq-server:amqp
 series: focal
 services:
   ceilometer:
