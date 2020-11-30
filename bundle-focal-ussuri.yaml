@@ -117,6 +117,7 @@ services:
       source: cloud:bionic-stein
       bluestore: False
   ceph-radosgw:
+    series: bionic
     annotations:
       gui-x: '1000'
       gui-y: '250'
