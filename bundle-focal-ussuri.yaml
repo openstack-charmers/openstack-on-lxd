@@ -91,7 +91,12 @@ relations:
   - neutron-api:neutron-plugin-api
 - - nova-cloud-controller:quantum-network-service
   - neutron-gateway:quantum-network-service
-
+- - heat
+  - mysql-innodb-cluster
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
 series: focal
 services:
   ceilometer:
