@@ -117,6 +117,12 @@ relations:
   - designate:coordinator-memcached
 - - ceph-osd:mon
   - ceph-mon:osd
+- - neutron-gateway:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - nova-cloud-controller:quantum-network-service
+  - neutron-gateway:quantum-network-service
 series: bionic
 services:
   ceilometer:
