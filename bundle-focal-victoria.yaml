@@ -97,6 +97,16 @@ relations:
   - keystone
 - - heat
   - rabbitmq-server
+- - designate:dns-backend
+  - designate-bind:dns-backend
+- - designate:identity-service
+  - keystone:identity-service
+- - designate:shared-db
+  - mysql-innodb-cluster:shared-db
+- - designate:amqp
+  - rabbitmq-server:amqp
+- - memcached:cache
+  - designate:coordinator-memcached
 series: focal
 services:
   ceilometer:
