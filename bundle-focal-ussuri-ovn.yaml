@@ -152,7 +152,7 @@ relations:
 - - gnocchi:storage-ceph
   - ceph-mon:client
 - - gnocchi:shared-db
-  - mysql:shared-db
+  - mysql-innodb-cluster:shared-db
 - - gnocchi:amqp
   - rabbitmq-server:amqp
 - - gnocchi:coordinator-memcached
