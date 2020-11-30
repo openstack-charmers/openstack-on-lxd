@@ -1,34 +1,20 @@
+variables:
+  data-port: &data-port br-ex:eth1
+  openstack-origin: &openstack-origin distro
+  worker-multiplier: &worker-multiplier 0.25
+  expected-osd-count: &expected-osd-count 3
+  expected-mon-count: &expected-mon-count 3
 relations:
-- - placement
-  - mysql
-- - placement
-  - keystone
-- - placement
-  - nova-cloud-controller
-- - nova-compute:ceph-access
-  - cinder-ceph:ceph-access
 - - nova-compute:amqp
   - rabbitmq-server:amqp
-- - neutron-gateway:amqp
-  - rabbitmq-server:amqp
-- - keystone:shared-db
-  - mysql:shared-db
 - - nova-cloud-controller:identity-service
   - keystone:identity-service
 - - glance:identity-service
   - keystone:identity-service
 - - neutron-api:identity-service
   - keystone:identity-service
-- - neutron-openvswitch:neutron-plugin-api
-  - neutron-api:neutron-plugin-api
-- - neutron-api:shared-db
-  - mysql:shared-db
 - - neutron-api:amqp
   - rabbitmq-server:amqp
-- - neutron-gateway:neutron-plugin-api
-  - neutron-api:neutron-plugin-api
-- - glance:shared-db
-  - mysql:shared-db
 - - glance:amqp
   - rabbitmq-server:amqp
 - - nova-cloud-controller:image-service
@@ -39,16 +25,8 @@ relations:
   - nova-compute:cloud-compute
 - - nova-cloud-controller:amqp
   - rabbitmq-server:amqp
-- - nova-cloud-controller:quantum-network-service
-  - neutron-gateway:quantum-network-service
-- - nova-compute:neutron-plugin
-  - neutron-openvswitch:neutron-plugin
-- - neutron-openvswitch:amqp
-  - rabbitmq-server:amqp
 - - openstack-dashboard:identity-service
   - keystone:identity-service
-- - nova-cloud-controller:shared-db
-  - mysql:shared-db
 - - nova-cloud-controller:neutron-api
   - neutron-api:neutron-api
 - - cinder:image-service
@@ -63,60 +41,22 @@ relations:
   - cinder:storage-backend
 - - ceph-mon:client
   - nova-compute:ceph
-- - cinder:shared-db
-  - mysql:shared-db
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
 - - ceph-mon:client
   - cinder-ceph:ceph
 - - ceph-mon:client
   - glance:ceph
+- - ceph-osd:mon
+  - ceph-mon:osd
 - - ceph-radosgw:mon
   - ceph-mon:radosgw
 - - ceph-radosgw:identity-service
   - keystone:identity-service
-- - heat
-  - mysql
-- - heat
+- - placement
   - keystone
-- - heat
-  - rabbitmq-server
-- - ceilometer:identity-service
-  - keystone:identity-service
-- - ceilometer:amqp
-  - rabbitmq-server:amqp
-- - ceilometer-agent:ceilometer-service
-  - ceilometer:ceilometer-service
-- - ceilometer:identity-notifications
-  - keystone:identity-notifications
-- - ceilometer-agent:nova-ceilometer
-  - nova-compute:nova-ceilometer
-- - ceilometer-agent:amqp
-  - rabbitmq-server:amqp
-- - gnocchi:storage-ceph
-  - ceph-mon:client
-- - gnocchi:shared-db
-  - mysql:shared-db
-- - gnocchi:amqp
-  - rabbitmq-server:amqp
-- - gnocchi:coordinator-memcached
-  - memcached:cache
-- - gnocchi:metric-service
-  - ceilometer:metric-service
-- - gnocchi:identity-service
-  - keystone:identity-service
-- - ceilometer:identity-credentials
-  - keystone:identity-credentials
-- - designate:dns-backend
-  - designate-bind:dns-backend
-- - designate:identity-service
-  - keystone:identity-service
-- - designate:shared-db
-  - mysql:shared-db
-- - designate:amqp
-  - rabbitmq-server:amqp
-- - memcached:cache
-  - designate:coordinator-memcached
-- - ceph-osd:mon
-  - ceph-mon:osd
+- - placement
+  - nova-cloud-controller
 - - keystone:shared-db
   - keystone-mysql-router:shared-db
 - - cinder:shared-db
@@ -187,10 +127,11 @@ services:
     charm: cs:ceilometer
     num_units: 1
     options:
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   ceilometer-agent:
     charm: cs:ceilometer-agent
   ceph-mon:
+    series: bionic
     annotations:
       gui-x: '750'
       gui-y: '500'
@@ -200,6 +141,7 @@ services:
       expected-osd-count: 3
       source: cloud:bionic-stein
   ceph-osd:
+    series: bionic
     annotations:
       gui-x: '1000'
       gui-y: '500'
@@ -228,7 +170,7 @@ services:
       worker-multiplier: 0.1
       block-device: None
       glance-api-version: 2
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   cinder-ceph:
     annotations:
       gui-x: '750'
@@ -240,7 +182,7 @@ services:
     num_units: 1
     options:
       nameservers: 'ns1.example.com ns2.example.com'
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   designate-bind:
     charm: cs:designate-bind
     num_units: 1
@@ -252,7 +194,7 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   gnocchi:
     annotations:
       gui-x: '1500'
@@ -260,13 +202,13 @@ services:
     charm: cs:gnocchi
     num_units: 1
     options:
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   heat:
     charm: cs:heat
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   keystone:
     annotations:
       gui-x: '500'
@@ -275,19 +217,19 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   memcached:
     annotations:
       gui-x: '1500'
       gui-y: '500'
     charm: cs:memcached
     num_units: 1
-  mysql:
+  mysql-innodb-cluster:
     annotations:
       gui-x: '0'
       gui-y: '250'
-    charm: cs:percona-cluster
-    num_units: 1
+    charm: cs:mysql-innodb-cluster
+    num_units: 3
     options:
       max-connections: 1000
       innodb-buffer-pool-size: 256M
@@ -301,8 +243,8 @@ services:
     options:
       worker-multiplier: 0.1
       neutron-security-groups: true
-      overlay-network-type: "gre vxlan"
-      openstack-origin: distro
+      #overlay-network-type: "gre vxlan"
+      openstack-origin: *openstack-origin
       flat-network-providers: physnet1
   placement:
     annotations:
@@ -312,7 +254,7 @@ services:
     num_units: 1
     options:
       worker-multiplier: 0.1
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   neutron-gateway:
     annotations:
       gui-x: '0'
@@ -321,9 +263,9 @@ services:
     num_units: 1
     options:
       bridge-mappings: physnet1:br-ex
-      data-port: br-ex:eth1
+      data-port: *data-port
       worker-multiplier: 0.1
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   neutron-openvswitch:
     annotations:
       gui-x: '250'
@@ -339,7 +281,7 @@ services:
     options:
       worker-multiplier: 0.1
       network-manager: Neutron
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
       ram-allocation-ratio: '64'
       cpu-allocation-ratio: '64'
   nova-compute:
@@ -352,7 +294,7 @@ services:
       enable-live-migration: False
       enable-resize: False
       migration-auth-type: ssh
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
       force-raw-images: False
   openstack-dashboard:
     annotations:
@@ -361,10 +303,80 @@ services:
     charm: cs:openstack-dashboard
     num_units: 1
     options:
-      openstack-origin: distro
+      openstack-origin: *openstack-origin
   rabbitmq-server:
     annotations:
       gui-x: '500'
       gui-y: '250'
     charm: cs:rabbitmq-server
+    num_units: 1
+  cinder-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  glance-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  keystone-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  neutron-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  placement-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  nova-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  dashboard-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  vault-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  neutron-api-plugin-ovn:
+    annotations:
+      gui-x: '690'
+      gui-y: '1385'
+    charm: cs:neutron-api-plugin-ovn
+  ovn-central:
+    annotations:
+      gui-x: '70'
+      gui-y: '1550'
+    charm: cs:ovn-central
+    num_units: 3
+    options:
+      source: *openstack-origin
+  ovn-chassis:
+    annotations:
+      gui-x: '120'
+      gui-y: '1030'
+    charm: cs:ovn-chassis
+    # *** Please update the `bridge-interface-mappings` to values suitable ***
+    # *** for thehardware used in your deployment.  See the referenced     ***
+    # *** documentation at the top of this file.                           ***
+    options:
+      ovn-bridge-mappings: physnet1:br-ex
+      bridge-interface-mappings: *data-port
+  vault:
+    annotations:
+      gui-x: '1610'
+      gui-y: '1430'
+    charm: cs:vault
     num_units: 1
