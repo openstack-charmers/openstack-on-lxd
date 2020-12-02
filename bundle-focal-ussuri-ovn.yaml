@@ -122,8 +122,6 @@ relations:
 - - vault:certificates
   - mysql-innodb-cluster:certificates
 - - heat
-  - mysql-innodb-cluster
-- - heat
   - keystone
 - - heat
   - rabbitmq-server
@@ -131,8 +129,6 @@ relations:
   - designate-bind:dns-backend
 - - designate:identity-service
   - keystone:identity-service
-- - designate:shared-db
-  - mysql-innodb-cluster:shared-db
 - - designate:amqp
   - rabbitmq-server:amqp
 - - memcached:cache
@@ -153,8 +149,6 @@ relations:
   - rabbitmq-server:amqp
 - - gnocchi:storage-ceph
   - ceph-mon:client
-- - gnocchi:shared-db
-  - mysql-innodb-cluster:shared-db
 - - gnocchi:amqp
   - rabbitmq-server:amqp
 - - gnocchi:coordinator-memcached
@@ -165,6 +159,18 @@ relations:
   - keystone:identity-service
 - - ceilometer:identity-credentials
   - keystone:identity-credentials
+- - gnocchi:shared-db
+  - gnocchi-mysql-router:shared-db
+- - gnocchi-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - designate:shared-db
+  - designate-mysql-router:shared-db
+- - designate-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
+- - heat:shared-db
+  - heat-mysql-router:shared-db
+- - heat-mysql-router:db-router
+  - mysql-innodb-cluster:db-router
 series: focal
 services:
   ceilometer:
@@ -408,3 +414,19 @@ services:
       gui-y: '1430'
     charm: cs:vault
     num_units: 1
+  heat-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  gnocchi-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+  designate-mysql-router:
+    annotations:
+      gui-x: '900'
+      gui-y: '1400'
+    charm: cs:mysql-router
+
