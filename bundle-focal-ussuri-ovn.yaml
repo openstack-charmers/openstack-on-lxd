@@ -171,6 +171,12 @@ relations:
   - heat-mysql-router:shared-db
 - - heat-mysql-router:db-router
   - mysql-innodb-cluster:db-router
+- - vault:certificates
+  - designate:certificates
+- - vault:certificates
+  - heat:certificates
+- - vault:certificates
+  - gnocchi:certificates
 series: focal
 services:
   ceilometer:
