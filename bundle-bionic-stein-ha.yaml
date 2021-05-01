@@ -1,0 +1,433 @@
+relations:
+- - nova-compute:ceph-access
+  - cinder-ceph:ceph-access
+- - nova-compute:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:amqp
+  - rabbitmq-server:amqp
+- - keystone:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:identity-service
+  - keystone:identity-service
+- - glance:identity-service
+  - keystone:identity-service
+- - neutron-api:identity-service
+  - keystone:identity-service
+- - neutron-openvswitch:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - neutron-api:shared-db
+  - mysql:shared-db
+- - neutron-api:amqp
+  - rabbitmq-server:amqp
+- - neutron-gateway:neutron-plugin-api
+  - neutron-api:neutron-plugin-api
+- - glance:shared-db
+  - mysql:shared-db
+- - glance:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:image-service
+  - glance:image-service
+- - nova-compute:image-service
+  - glance:image-service
+- - nova-cloud-controller:cloud-compute
+  - nova-compute:cloud-compute
+- - nova-cloud-controller:amqp
+  - rabbitmq-server:amqp
+- - nova-cloud-controller:quantum-network-service
+  - neutron-gateway:quantum-network-service
+- - nova-compute:neutron-plugin
+  - neutron-openvswitch:neutron-plugin
+- - neutron-openvswitch:amqp
+  - rabbitmq-server:amqp
+- - openstack-dashboard:identity-service
+  - keystone:identity-service
+- - nova-cloud-controller:shared-db
+  - mysql:shared-db
+- - nova-cloud-controller:neutron-api
+  - neutron-api:neutron-api
+- - cinder:image-service
+  - glance:image-service
+- - cinder:amqp
+  - rabbitmq-server:amqp
+- - cinder:identity-service
+  - keystone:identity-service
+- - cinder:cinder-volume-service
+  - nova-cloud-controller:cinder-volume-service
+- - cinder-ceph:storage-backend
+  - cinder:storage-backend
+- - ceph-mon:client
+  - nova-compute:ceph
+- - cinder:shared-db
+  - mysql:shared-db
+- - ceph-mon:client
+  - cinder-ceph:ceph
+- - ceph-mon:client
+  - glance:ceph
+- - ceph-radosgw:mon
+  - ceph-mon:radosgw
+- - ceph-radosgw:identity-service
+  - keystone:identity-service
+- - heat
+  - mysql
+- - heat
+  - keystone
+- - heat
+  - rabbitmq-server
+- - ceilometer:identity-service
+  - keystone:identity-service
+- - ceilometer:amqp
+  - rabbitmq-server:amqp
+- - ceilometer-agent:ceilometer-service
+  - ceilometer:ceilometer-service
+- - ceilometer:identity-notifications
+  - keystone:identity-notifications
+- - ceilometer-agent:nova-ceilometer
+  - nova-compute:nova-ceilometer
+- - ceilometer-agent:amqp
+  - rabbitmq-server:amqp
+- - gnocchi:storage-ceph
+  - ceph-mon:client
+- - gnocchi:shared-db
+  - mysql:shared-db
+- - gnocchi:amqp
+  - rabbitmq-server:amqp
+- - gnocchi:coordinator-memcached
+  - memcached:cache
+- - gnocchi:metric-service
+  - ceilometer:metric-service
+- - gnocchi:identity-service
+  - keystone:identity-service
+- - ceilometer:identity-credentials
+  - keystone:identity-credentials
+- - designate:dns-backend
+  - designate-bind:dns-backend
+- - designate:identity-service
+  - keystone:identity-service
+- - designate:shared-db
+  - mysql:shared-db
+- - designate:amqp
+  - rabbitmq-server:amqp
+- - memcached:cache
+  - designate:coordinator-memcached
+- - ceph-osd:mon
+  - ceph-mon:osd
+- - mysql:ha
+  - hacluster-mysql:ha
+- - keystone:ha
+  - hacluster-keystone:ha
+- - aodh:ha
+  - hacluster-aodh:ha
+- - glance:ha
+  - hacluster-glance:ha
+- - gnocchi:ha
+  - hacluster-gnocchi:ha
+- - cinder:ha
+  - hacluster-cinder:ha
+- - designate:ha
+  - hacluster-designate:ha
+- - neutron-api:ha
+  - hacluster-neutron:ha
+- - nova-cloud-controller:ha
+  - hacluster-nova:ha
+- - openstack-dashboard:ha
+  - hacluster-horizon:ha
+- - heat:ha
+  - hacluster-heat:ha
+- - ceilometer:ha
+  - hacluster-ceilometer:ha
+- - barbican:ha
+  - hacluster-barbican:ha
+- - octavia:ha
+  - hacluster-octavia:ha
+- - vault:ha
+  - hacluster-vault:ha
+- - ceph-radosgw:ha
+  - hacluster-radosgw:ha
+- - easyrsa:client
+  - etcd:certificates
+- - aodh:shared-db
+  - mysql:shared-db
+- - aodh:identity-service
+  - keystone:identity-service
+- - aodh:amqp
+  - rabbitmq-server:amqp
+- - octavia:amqp
+  - rabbitmq-server:amqp
+- - octavia:shared-db
+  - mysql:shared-db
+- - octavia:identity-service
+  - keystone:identity-service
+- - barbican:amqp
+  - rabbitmq-server:amqp
+- - barbican:shared-db
+  - mysql:shared-db
+- - barbican:identity-service
+  - keystone:identity-service
+- - barbican:secrets
+  - barbican-vault:secrets
+- - barbican-vault:secrets-storage
+  - vault:secrets
+- - vault:shared-db
+  - mysql:shared-db
+- - etcd:db
+  - vault:etcd
+- - memcached:cache
+  - nova-cloud-controller:memcache
+- - octavia:neutron-openvswitch
+  - neutron-openvswitch:neutron-plugin
+series: bionic
+services:
+  aodh:
+    charm: cs:aodh
+    num_units: 3
+    options:
+      openstack-origin: cloud:bionic-stein
+      worker-multiplier: 0.1
+      vip: 10.0.8.201
+  barbican:
+    charm: cs:barbican
+    num_units: 3
+    options:
+      openstack-origin: cloud:bionic-stein
+      worker-multiplier: 0.1
+      vip: 10.0.8.202
+  barbican-vault:
+    charm: cs:barbican-vault
+  etcd:
+    charm: cs:etcd
+    num_units: 3
+  easyrsa:
+    charm: cs:~containers/easyrsa
+    num_units: 1
+  octavia:
+    charm: cs:octavia
+    num_units: 3
+    options:
+      openstack-origin: cloud:bionic-stein
+      worker-multiplier: 0.1
+      vip: 10.0.8.203
+  vault:
+    charm: cs:vault
+    num_units: 3
+  ceilometer:
+    charm: cs:ceilometer
+    num_units: 3
+    options:
+      vip: 10.0.8.204
+  ceilometer-agent:
+    charm: cs:ceilometer-agent
+  ceph-mon:
+    annotations:
+      gui-x: '750'
+      gui-y: '500'
+    charm: cs:ceph-mon
+    num_units: 3
+    options:
+      monitor-count: 3
+      expected-osd-count: 3
+      source: cloud:bionic-stein
+  ceph-osd:
+    annotations:
+      gui-x: '1000'
+      gui-y: '500'
+    charm: cs:ceph-osd
+    num_units: 3
+    options:
+      osd-devices: /srv/osd
+      use-direct-io: False
+      source: cloud:bionic-stein
+      bluestore: False
+  ceph-radosgw:
+    annotations:
+      gui-x: '1000'
+      gui-y: '250'
+    charm: cs:ceph-radosgw
+    num_units: 3
+    options:
+      source: cloud:bionic-stein
+      vip: 10.0.8.205
+  cinder:
+    annotations:
+      gui-x: '750'
+      gui-y: '0'
+    charm: cs:cinder
+    num_units: 3
+    options:
+      vip: 10.0.8.206
+      worker-multiplier: 0.1
+      block-device: None
+      glance-api-version: 2
+      openstack-origin: cloud:bionic-stein
+  cinder-ceph:
+    annotations:
+      gui-x: '750'
+      gui-y: '250'
+    charm: cs:cinder-ceph
+  designate:
+    charm: cs:designate
+    num_units: 3
+    options:
+      nameservers: 'ns1.example.com ns2.example.com'
+      vip: 10.0.8.207
+  designate-bind:
+    charm: cs:designate-bind
+    num_units: 3
+  glance:
+    annotations:
+      gui-x: '250'
+      gui-y: '0'
+    charm: cs:glance
+    num_units: 3
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-stein
+      vip: 10.0.8.208
+  gnocchi:
+    annotations:
+      gui-x: '1500'
+      gui-y: '250'
+    charm: cs:gnocchi
+    num_units: 3
+    options:
+      openstack-origin: cloud:bionic-stein
+      vip: 10.0.8.209
+  heat:
+    charm: cs:heat
+    num_units: 3
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-stein
+      vip: 10.0.8.210
+  keystone:
+    annotations:
+      gui-x: '500'
+      gui-y: '0'
+    charm: cs:keystone
+    num_units: 3
+    options:
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-stein
+      vip: 10.0.8.211
+  memcached:
+    annotations:
+      gui-x: '1500'
+      gui-y: '500'
+    charm: cs:memcached
+    num_units: 3
+  mysql:
+    annotations:
+      gui-x: '0'
+      gui-y: '250'
+    charm: cs:percona-cluster
+    num_units: 3
+    options:
+      max-connections: 1000
+      innodb-buffer-pool-size: 256M
+      tuning-level: fast
+      min-cluster-size: 3
+      vip: 10.0.8.212
+  neutron-api:
+    annotations:
+      gui-x: '500'
+      gui-y: '500'
+    charm: cs:neutron-api
+    num_units: 3
+    options:
+      worker-multiplier: 0.1
+      neutron-security-groups: true
+      overlay-network-type: "gre vxlan"
+      openstack-origin: cloud:bionic-stein
+      flat-network-providers: physnet1
+      enable-l3ha: true
+      vip: 10.0.8.213
+  neutron-gateway:
+    annotations:
+      gui-x: '0'
+      gui-y: '0'
+    charm: cs:neutron-gateway
+    num_units: 3
+    options:
+      bridge-mappings: physnet1:br-ex
+      data-port: br-ex:eth1
+      worker-multiplier: 0.1
+      openstack-origin: cloud:bionic-stein
+  neutron-openvswitch:
+    annotations:
+      gui-x: '250'
+      gui-y: '500'
+    charm: cs:neutron-openvswitch
+    num_units: 0
+  nova-cloud-controller:
+    annotations:
+      gui-x: '0'
+      gui-y: '500'
+    charm: cs:nova-cloud-controller
+    num_units: 3
+    options:
+      worker-multiplier: 0.1
+      network-manager: Neutron
+      openstack-origin: cloud:bionic-stein
+      ram-allocation-ratio: '64'
+      cpu-allocation-ratio: '64'
+      vip: 10.0.8.214
+  nova-compute:
+    annotations:
+      gui-x: '250'
+      gui-y: '250'
+    charm: cs:nova-compute
+    num_units: 3
+    options:
+      enable-live-migration: False
+      enable-resize: False
+      migration-auth-type: ssh
+      openstack-origin: cloud:bionic-stein
+      force-raw-images: False
+  openstack-dashboard:
+    annotations:
+      gui-x: '500'
+      gui-y: '-250'
+    charm: cs:openstack-dashboard
+    num_units: 3
+    options:
+      vip: 10.0.8.215
+      openstack-origin: cloud:bionic-stein
+  rabbitmq-server:
+    annotations:
+      gui-x: '500'
+      gui-y: '250'
+    charm: cs:rabbitmq-server
+    num_units: 3
+    options:
+      min-cluster-size: 3
+  hacluster-aodh:
+    charm: cs:hacluster
+  hacluster-barbican:
+    charm: cs:hacluster
+  hacluster-ceilometer:
+    charm: cs:hacluster
+  hacluster-cinder:
+    charm: cs:hacluster
+  hacluster-designate:
+    charm: cs:hacluster
+  hacluster-glance:
+    charm: cs:hacluster
+  hacluster-gnocchi:
+    charm: cs:hacluster
+  hacluster-heat:
+    charm: cs:hacluster
+  hacluster-horizon:
+    charm: cs:hacluster
+  hacluster-keystone:
+    charm: cs:hacluster
+  hacluster-mysql:
+    charm: cs:hacluster
+  hacluster-neutron:
+    charm: cs:hacluster
+  hacluster-nova:
+    charm: cs:hacluster
+  hacluster-octavia:
+    charm: cs:hacluster
+  hacluster-radosgw:
+    charm: cs:hacluster
+  hacluster-vault:
+    charm: cs:hacluster
