@@ -109,18 +109,17 @@ the [LXD production setup][lxd-production-setup] guide, specifically those relat
 `/etc/sysctl.conf` file. Note that swap usage will also be turned down to a
 very low level.
 
-> **Tip**: Make a copy of file `/etc/sysctl.conf` before making changes so you
-  can easily revert back to the original configuration.
+> **Tip**: Instead of `/etc/sysctl.conf`, put sysctl parameters in an application-specific conf file in the `/etc/sysctl.d/` directory. This prevents conflicts with the system's package manager.
 
 Change the kernel's behaviour in real-time like this:
 
-    echo fs.inotify.max_queued_events=1048576 | sudo tee -a /etc/sysctl.conf
-    echo fs.inotify.max_user_instances=1048576 | sudo tee -a /etc/sysctl.conf
-    echo fs.inotify.max_user_watches=1048576 | sudo tee -a /etc/sysctl.conf
-    echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.conf
-    #echo vm.swappiness=1 | sudo tee -a /etc/sysctl.conf
-    sudo sysctl -p
-
+    echo fs.inotify.max_queued_events=1048576 | sudo tee -a /etc/sysctl.d/50-openstack-on-lxd.conf
+    echo fs.inotify.max_user_instances=1048576 | sudo tee -a /etc/sysctl.d/50-openstack-on-lxd.conf
+    echo fs.inotify.max_user_watches=1048576 | sudo tee -a /etc/sysctl.d/50-openstack-on-lxd.conf
+    echo vm.max_map_count=262144 | sudo tee -a /etc/sysctl.d/50-openstack-on-lxd.conf
+    #echo vm.swappiness=1 | sudo tee -a /etc/sysctl.d/50-openstack-on-lxd.conf
+    sudo sysctl -p /etc/sysctl.d/50-openstack-on-lxd.conf
+    
 # LXD
 
 ## Configure LXD
